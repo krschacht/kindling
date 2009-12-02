@@ -1,0 +1,26 @@
+<h1>Listing gardens</h1>
+
+<table>
+  <tr>
+    <th>Scene</th>
+    <th>Owner</th>
+    <th>Creator</th>
+    <th>Description</th>
+  </tr>
+
+<% @gardens.each do |garden| %>
+  <tr>
+    <td><%=h garden.scene_id %></td>
+    <td><%=h garden.owner_id %></td>
+    <td><%=h garden.creator_id %></td>
+    <td><%=h garden.description %></td>
+    <td><%= link_to 'Show', garden %></td>
+    <td><%= link_to 'Edit', edit_garden_path(garden) %></td>
+    <td><%= link_to 'Destroy', garden, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New garden', new_garden_path %>

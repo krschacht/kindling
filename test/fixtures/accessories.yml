@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  accessory_type_id: 1
+  garden_id: 1
+  orientation: 1
+  sender_id: 1
+  scale: 1
+  xcor: 1
+  ycor: 1
+  zcor: 1
+
+two:
+  accessory_type_id: 1
+  garden_id: 1
+  orientation: 1
+  sender_id: 1
+  scale: 1
+  xcor: 1
+  ycor: 1
+  zcor: 1

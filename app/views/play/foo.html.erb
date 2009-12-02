@@ -1,0 +1,25 @@
+<p>Below here is the "Connect" button.</p>
+
+<%= fb_login_and_redirect(url_for(:controller => :play, :action => :foo)) %>
+
+<p>Above here is the "Connect" button.</p>
+
+<p>Hello, <%= facebook_session.user.first_name -%>.</p>
+
+<p>Hello fb_name, <%= fb_name(facebook_session.user.id, :useyou => false) -%>.</p>
+
+<p>Hello user ID, <%= facebook_session.user.id -%>.</p>
+
+<p>Invite <%= fb_name(facebook_session.user.friends.rand.id)%>  and <%= fb_name(facebook_session.user.friends.rand.id)%> to the party.</p>
+
+<p>You have <%= facebook_session.user.friends.length -%> friends.</p>
+
+<br />
+
+<%= fb_comments('rml_garden_development_app', true, false, 5, options={:send_notification_uid => facebook_session.user.id, :title => "Please comment on my amazing new app"}) -%>
+
+<br />
+
+<p><%= fb_prompt_permission('email', "Would you like to receive email from our application?" ) %></p>
+
+<%= fb_title("Titlebar?  Bah!") %>

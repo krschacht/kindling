@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  category_id: 1
+  name: MyString
+  image_file_name: MyString
+  time_to_mature: 1
+  purchase_price: 1
+  sale_price: 1
+
+two:
+  category_id: 1
+  name: MyString
+  image_file_name: MyString
+  time_to_mature: 1
+  purchase_price: 1
+  sale_price: 1

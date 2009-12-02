@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  facebook_id: 1
+  level_id: 1
+  account_balance: 1
+  premium_account_balance: 1
+  points: 1
+  deleted_at: 2009-11-26 12:54:30
+
+two:
+  facebook_id: 1
+  level_id: 1
+  account_balance: 1
+  premium_account_balance: 1
+  points: 1
+  deleted_at: 2009-11-26 12:54:30

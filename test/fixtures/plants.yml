@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  plant_type_id: 1
+  garden_id: 1
+  sender_id: 1
+  sold_at: 2009-11-26 13:02:11
+  hydration_level: 1
+  orientation: 1
+  scale: 1
+  xcor: 1
+  ycor: 1
+  zcor: 1
+
+two:
+  plant_type_id: 1
+  garden_id: 1
+  sender_id: 1
+  sold_at: 2009-11-26 13:02:11
+  hydration_level: 1
+  orientation: 1
+  scale: 1
+  xcor: 1
+  ycor: 1
+  zcor: 1
