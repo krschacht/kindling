@@ -3,15 +3,15 @@
 # Your callback url in Facebook should be set to http://public_host:public_port
 
 development:
-  api_key: 5831c15304f771eea956829585090eb1
-  secret_key: 9471dca454ad22aeb02114bf3c784e63
-  canvas_page_name:  rml-gardens
-  callback_url: http://lerner.co.il:3456/
+  api_key: API_KEY_FOR_YOUR_PRIVATE_FACEBOOK_APP
+  secret_key: SECRET_FOR_YOUR_PRIVATE_FACEBOOK_APP
+  canvas_page_name:  NAME_OF_YOUR_FACEBOOK_APP
+  callback_url: http://YOUR_SERVER:3456/
   pretty_errors: false
   set_asset_host_to_callback_url: true
   tunnel:
-    public_host_username: reuven
-    public_host: lerner.co.il
+    public_host_username: YOUR_SSH_USERNAME_ON_YOUR_SERVER
+    public_host: YOUR_SERVER
     public_port: 3456
     local_port: 3457
 
@@ -29,8 +29,8 @@ test:
     local_port: 3457
 
 production:
-  api_key: 37430a8299cd4068954a9e3e1a103c93
-  secret_key: 6c63f4e1d129bbce3b3818e0ba5f15a8
-  canvas_page_name: http://apps.facebook.com/heroku-gardens/
-  callback_url: http://heroku-gardens.heroku.com/
+  api_key: API_KEY_FOR_YOUR_HEROKU_FACEBOOK_APP
+  secret_key: SECRET_FOR_YOUR_HEROKU_FACEBOOK_APP
+  canvas_page_name: http://apps.facebook.com/HEROKU_DOMAIN_NAME/
+  callback_url: http://HEROKU_DOMAIN_NAME.heroku.com/
   pretty_errors: true
