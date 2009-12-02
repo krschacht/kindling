@@ -28,3 +28,5 @@ config.action_mailer.delivery_method = :test
 # config.active_record.schema_format = :sql
 
 config.gem "thoughtbot-factory_girl", :lib => "factory_girl", :source => "http://gems.github.com"
+config.gem 'jscruggs-metric_fu', :lib => 'metric_fu', :source => 'http://gems.github.com'
+config.gem 'ruby-debug'
