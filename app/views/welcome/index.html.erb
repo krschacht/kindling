@@ -1,0 +1,8 @@
+<p>This page is accessible without requiring install</p>
+
+<%= link_to   "play game", 
+              { :controller => :play,
+              :host       => 'apps.facebook.com',
+              :only_path  => false,
+              :canvas     => true },
+              { :target     => '_top' } %>
