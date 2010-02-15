@@ -3,17 +3,17 @@
 # Your callback url in Facebook should be set to http://public_host:public_port
 
 development:
-  api_key: API_KEY_FOR_YOUR_PRIVATE_FACEBOOK_APP
-  secret_key: SECRET_FOR_YOUR_PRIVATE_FACEBOOK_APP
-  canvas_page_name:  NAME_OF_YOUR_FACEBOOK_APP
-  callback_url: http://YOUR_SERVER:3456/
+  api_key: 6535b158e7c39c800864794452ffa351
+  secret_key: dc22178f336969105809b40ab8beb772
+  canvas_page_name:  schacht-tictactoe
+  callback_url: http://web1.tunnlr.com:10107
   pretty_errors: false
   set_asset_host_to_callback_url: true
   tunnel:
-    public_host_username: YOUR_SSH_USERNAME_ON_YOUR_SERVER
-    public_host: YOUR_SERVER
-    public_port: 3456
-    local_port: 3457
+                 public_host_username: tunnlr11
+                 public_host: ssh1.tunnlr.com
+                 public_port: 10107
+                 local_port: 3000
 
 test:
   api_key: a7dd67a42b0ea8180a511ccf82d6fee3
