@@ -1,0 +1,7 @@
+development:
+  campaign_key: 5a8abb8aa6c87abadfd9fec4a019c282
+  secret_key: eb1831b8b50bdda535a8e3fe30f50e92
+
+production:
+  campaign_key: 5a8abb8aa6c87abadfd9fec4a019c282
+  secret_key: eb1831b8b50bdda535a8e3fe30f50e92

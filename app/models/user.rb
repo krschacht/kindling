@@ -8,7 +8,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :facebook_id
 
   has_many :premium_transactions, :order => "created_at"
-
+  has_many :gambit_postbacks, :foreign_key => 'uid'
+  
   after_create :award_new_player_premium_currency
 
   def installed?

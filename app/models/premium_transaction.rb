@@ -1,7 +1,7 @@
 class PremiumTransaction < ActiveRecord::Base
 
   belongs_to :user
-#  has_one :gambit_postback
+  has_one :gambit_postback
 #  has_one :sparechange_postback
 #  has_one :item
 

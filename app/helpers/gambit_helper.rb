@@ -1,0 +1,2 @@
+module GambitHelper
+end
