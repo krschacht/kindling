@@ -8,7 +8,8 @@ class ApplicationController < ActionController::Base
   helper_method :facebook_session, 
                 :api_key, 
                 :xd_receiver,
-                :current_user
+                :current_user,
+                :action_name_safe
 
   attr_reader   :current_user
 
@@ -20,7 +21,8 @@ class ApplicationController < ActionController::Base
                 :log_user_ids,
                 :set_ie7_header,
                 :update_install,
-                :update_install_source
+                :update_install_source,
+                :select_tab
 
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
 
@@ -70,11 +72,23 @@ class ApplicationController < ActionController::Base
 
     if  current_user && s && ! current_user.played?
       
-      current_user.update_attributes( { :install_source => s, :created_at => Time.now } )
+      current_user.update_attributes( 
+        { :install_source => s, 
+          :created_at => Time.now 
+        } )
 
     end
   end
 
+  def action_name_safe
+    # Eliminate any invalid iv characters from action.
+    params[:action].gsub( /\W/, '' )
+  end
+
+  def select_tab
+    instance_variable_set( "@#{controller_name}_tab", true )
+    instance_variable_set( "@#{controller_name}_#{action_name_safe}_tab", true )
+  end
 
   # Scrub sensitive parameters from your log
   # filter_parameter_logging :password

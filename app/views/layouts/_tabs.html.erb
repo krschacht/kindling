@@ -1,0 +1,39 @@
+<div class="tabs clearfix">
+  <ul class="left_tabs">
+    <%=
+      # Tabs must be declared inside a single
+      # rails tag like this because we the CSS
+      # breaks if there is any whitespace between
+      # the html tags. Not sure why...
+
+      tab(  "Play",
+            :controller => :play,
+            :action     => :index,
+            :selected   => @play_tab,
+            :first      => true  ) +
+
+      tab(  "Store",
+            :controller => :store,
+            :action     => :add,
+            :selected   => @store_tab ) +
+
+      tab(  "Welcome",
+            :controller => :welcome,
+            :action     => :index,
+            :selected   => @welcome_tab ) +
+
+      tab(  "Send Gifts",
+            :href       => "#",
+            :last       => true )
+
+    %>
+  </ul>
+  <ul class="right_tabs">
+    <%=
+      tab(  "Help & Discuss",
+            :href       => "#",
+            :first      => true,
+            :last       => true )
+    %>
+  </ul>
+</div> <!-- tabs -->

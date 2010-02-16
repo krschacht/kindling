@@ -2,22 +2,31 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
           "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
-
   <head>
-    <%= javascript_include_tag :defaults %>
-    <%= stylesheet_link_tag :all %>
+    <%= render :partial => 'layouts/header_includes' %>
 
-    <title><%= @title || "#{params[:controller]} #{params[:action]}" -%></title>
+    <title><%= @page_title || "#{params[:controller]} #{params[:action]}" -%></title>
   </head>
 
   <body>
-    <% if @headline.present? %>
-    <h1><%= @headline %></h1>
-    <% end %>
+    <a name="top"></a>
 
-    <%= yield %>
+    <div id="page_body" class="page_body gardens <%= controller.controller_name %> <%= controller.controller_name %>_<%= action_name_safe %> viewing_as_">
+
+      <div class="dashboard_tab_wrapper">
+        <div class="dashboard_title">
+          App Name<span class="tm">TM</span>
+        </div>
+        <%= render :partial => "layouts/tabs" %>
+      </div>
+
+      <div class="inner_body">
+
+        <%= yield %>
+
+      </div> <!-- inner_body -->
+    </div> <!-- page_body -->
 
     <%= render :partial => "layouts/javascripts" %>
-
   </body>
 </html>

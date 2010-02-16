@@ -1,0 +1,719 @@
+/**************************************************************************************************/
+/*  FIRST, CSS UNIVERSAL TO ANY FACEBOOK APP
+/*  These styles imitate the Facebook layout structure and specific design elements
+/*  v1.1
+/*  Major Updates:
+/*    2/24 - Expanded so this file would work equally well with iframe apps as it does with FBML
+/*
+/**************************************************************************************************/
+
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 11px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.page_body {
+	width: 748px;
+	position: relative;
+	border: 1px solid #999999; /* delete this for the new layout */
+	font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
+}
+
+.footer {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/*** GLOBAL STYLES **************************************************************************************/
+/********************************************************************************************************/
+
+h2 { margin: 0; }
+
+p { margin: 10px 0; }
+
+img a {
+  border: none;
+}
+
+img {
+  border: none;
+}
+
+a,
+a:link,
+a:visited,
+a:hover,
+a:active {
+  color: #3B5998;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/*** PAGE HEADER ****************************************************************************************/
+/********************************************************************************************************/
+
+.success_msg {
+	background: #FFF9D7 none repeat scroll 0% 50%;
+	border: 1px solid #E2C822;
+	position: relative;
+}	
+
+.error_msg {
+	background: #FFEBE8 none repeat scroll 0% 50%;
+	border: 1px solid #DD3C10;
+	position: relative;
+}
+
+.error_details {
+  padding: 4px 8px;
+}
+
+.explanation_msg {
+	background: #F1F1F1 none repeat scroll 0% 50%;
+	border: 1px solid #AAAAAA;
+}
+
+.interactive_msg {
+	background: #D7E1FF none repeat scroll 0% 50%;
+	border: 1px solid #3B5999;  
+}
+
+.inner_body .success_msg,
+.inner_body .error_msg,
+.inner_body .explanation_msg,
+.inner_body .interactive_msg,
+.inner_body_grey .success_msg,
+.inner_body_grey .error_msg,
+.inner_body_grey .explanation_msg,
+.inner_body .interactive_msg, .referral_message {
+	margin: 10px 0;
+	font-size: 14px;
+	padding: 10px;
+	font-weight: bold;
+}
+
+.success_msg p,
+.error_msg p,
+.explanation_msg p,
+.interactive_msg p {
+	font-weight: normal;
+	margin: 5px 0 0 0;
+	color: #222222;
+}
+
+.success_msg p a,
+.error_msg p a,
+.explanation_msg p a,
+.interactive_msg p a {
+  font-weight: bold;
+}
+
+.pipe {
+	color: #AAAAAA;
+	padding: 0px 5px;
+}
+
+.pipe .right {
+	display: block;
+	float: right;
+}
+
+.dashboard_actions {
+	padding: 10px 10px 5px 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+.dashboard_actions .right {
+	display: block;
+	float: right;
+}
+
+/*** These are for a traditional-looking Facebook application header ***/
+
+.dashboard_grey_wrapper {  /* This optionally wraps around the dashboard_title */
+	background: #F7F7F7;
+/*	height: 56px;  */
+}
+.dashboard_title {
+	background: no-repeat 21px 20px;
+	padding: 0px 10px 19px 11px;
+	margin: 0;
+	font-weight: bold;
+	font-size: 14px;
+	border-bottom: 1px solid #898989;
+	position: relative;
+}
+.dashboard_alert_link {
+    float: right;
+/*    background-color: #FFFFA0;  */
+    font-weight: normal;
+    font-size: 12px;
+}
+.dashboard_icon {
+	padding-left: 44px;
+}
+.dashboard_title .dashboard_actions {
+	position: absolute;
+	right: 0;
+	top: 10px;
+	padding: 10px 20px 5px 20px;
+	border-bottom: 0px;
+	font-weight: normal;
+	font-size: 11px;
+}	
+
+.dashboard_title .tm {
+	vertical-align: super; 
+	font-weight: normal; 
+	font-size: 7px;
+}
+
+/*** These are the "shorten" modifiers for a compressed header ****/
+
+.shorten_dashboard {
+	padding: 10px 10px 10px 45px;
+	background-position: 21px 10px;
+}
+.shorten_dashboard .dashboard_actions {
+	top: 3px;
+}
+/*** End *****/
+
+/*** This allows you to add tabs ***/
+
+.dashboard_tab_wrapper {
+	border-bottom: 1px solid #FFFFFF;
+	position: relative;
+}
+.dashboard_tab_wrapper .dashboard_title {
+	border-bottom: 0px;
+}
+/*** End *****/
+
+/*** This allows you to make use of the area on the right ***/
+.dashboard_rightarea_wrapper .dashboard_grey_wrapper {
+	width: 405px;
+	border-right: 1px solid #CCCCCC;
+}
+.dashboard_rightarea_wrapper .dashboard_actions {
+	width: 386px;
+}
+.dashboard_rightarea_wrapper .actions {
+	position: absolute;
+	top: 35px;
+	right: 20px;
+	width: 200px;
+}
+
+/** Custom FB-style tabs at the top of the app **/
+
+.tabs {
+  border-bottom: 1px solid #898989;
+}
+
+.tabs .left_tabs {
+  display: block;
+  float: left;
+  padding-left: 10px;
+}
+
+.tabs .right_tabs {
+  display: block;
+  float: right;
+  padding-right: 10px;
+}
+
+.tabs ul {
+  margin-bottom: -1px;
+  text-align: center;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tabs li {
+  -moz-background-clip: border;
+  -moz-background-inline-policy: continuous;
+  -moz-background-origin: padding;
+  background: #F1F1F1;
+  display: inline;
+  padding: 2px 0 3px;
+}
+
+.tabs li.first a {
+  border-color: #898989 #898989 #F1F1F1 #898989;
+  border-style: solid solid solid solid;
+  border-width: 1px 1px 1px 1px;
+}
+
+.tabs li a {
+  border-color: #898989 #898989 #F1F1F1 #FFFFFF;
+  border-style: solid solid solid none;
+  border-width: 1px 1px 1px 0;
+  color: #333333;
+  display: inline-block;
+  font-weight: bold;
+  padding: 2px 8px 3px 9px;
+}
+
+.tabs li a.selected {
+  -moz-background-clip: border;
+  -moz-background-inline-policy: continuous;
+  -moz-background-origin: padding;
+  background: #6D84B4 none repeat scroll 0 0;
+  border-color: #3B5998 #5973A9;
+  border-style: solid;
+  border-width: 1px;
+  color: #FFFFFF;
+  margin-left: -1px;
+}
+
+.tabs li a:hover.selected {
+  text-decoration: none;
+}
+
+/*** SEARCH PAGE HEADER *********************************************************************************/
+/********************************************************************************************************/
+
+.nobold {
+	font-weight: normal;
+}
+.skip_box {
+	position: absolute;
+	top: 50px;
+	right: 15px;
+	z-index: 1;
+	font-size: 16px;
+	color: #555555;
+}
+
+.search_nav_top {
+	font-size: 12px;
+	padding: 25px 0 5px 10px;
+	border-bottom: 1px solid #898989;
+}
+.search_nav_bottom {
+	font-size: 12px;
+	border-top: 1px solid #898989;
+}
+.pages {
+	float: right;
+	padding-right: 10px;
+	color: rgb(59, 89, 152);
+	font-size: 11px;
+}
+.pages span,
+.pages a {
+    display: block;
+	float: left;
+	padding: 3px;
+}
+.pages a:hover {
+	background-color: rgb(59, 89, 152);
+	color: #FFFFFF;
+	text-decoration: none;
+}   
+.top .current {
+	border-bottom: 3px solid rgb(59, 89, 152);
+	font-weight: bold;
+}
+.bottom .current {
+	border-top: 3px solid rgb(59, 89, 152);    
+    font-weight: bold;
+}
+.bottom span,
+.bottom a {
+    border-top: 3px solid #FFFFFF;
+}
+.pages .disabled {
+    display: none;
+}
+
+/*** FORM STUFF ***************/
+/******************************/
+
+.inputbox {
+	border: 1px solid #BDC7D8;
+	font-size: 11px;
+	padding: 3px;
+}
+.bluebutton {
+	background-color:#3B5998;
+/*	border: 1px solid #D8DFEA; */
+	color:#FFFFFF;
+	font-family:"lucida grande",tahoma,verdana,arial,sans-serif;
+	font-size:11px;
+	padding: 4px 5px 4px 5px;
+	cursor: pointer;
+	text-align: center;
+}
+.disabledbutton {
+  border: 0;
+  color: #DDDDDD;
+  background-color: #AAAAAA;
+}
+.bigbutton {
+  font-size: 14px;
+  padding: 5px;
+}
+.fake_blue_button {
+	background-color: #3B5998;
+	border: 1px solid #D8DFEA;
+	color: #FFFFFF;
+	cursor: pointer;
+	display: inline;
+	font-size: 11px;
+	padding: 4px 10px;
+	text-align: center;
+	font-weight: normal;
+}
+
+/*** MAIN LAYOUT ****************************************************************************************/
+/********************************************************************************************************/
+
+.inner_body,
+.inner_body_grey {
+	padding: 0px 10px 10px 10px;
+	position: relative;
+/*	border-bottom: 1px solid #999999; */
+/*	overflow: auto; */
+/*	width: 735px; */
+/*  padding-bottom: 2em; */
+}
+.inner_body_grey {
+	background: #F7F7F7;
+}
+
+.full_column {
+/*	width: 605px; */
+/*	padding: 0 10px; */
+	position: relative;
+  margin: 0 auto;
+}
+
+.left_column {
+/*	border-right: 1px solid #DDDDDD; */
+	padding-right: 10px;
+}
+
+.big_column {  /* Can fit next to one small_column */
+	width: 518px;
+	float: left;
+	position: relative;
+}
+
+.medium_column {  /* Can fit next to one medium_column */
+  width: 359px;
+	float: left;
+  position: relative;
+}
+
+.tri_column {  /* Can fit next two tri_column */
+  width: 236px;
+  float: left;
+  position: relative;
+}
+
+.small_column { /* Can fit next to one big_column */
+	width: 200px;
+	float: left;
+	position: relative;
+}
+
+.small_column_interior {
+	border-left: 1px solid #EEEEEE;
+	margin-top: 20px;
+}
+
+.big_column,
+.medium_column,
+.tri_column,
+.small_column {
+  margin-left: 10px;
+}
+
+.first_column {
+  margin-left: 0px;
+}
+
+/*** LAYOUT OBJECTS *************************************************************************************/
+/********************************************************************************************************/
+
+.module_title,
+.section_title {
+	font-size: 16px;
+	font-weight: bold;
+	margin-top: 20px;
+	color: #333333;
+}
+
+.section_body {
+  font-size: 13px;
+  margin: 10px 0;
+  color: #333333;
+}
+
+.module_on_white_minimal {
+	margin-top: 10px;
+}
+
+.module_on_white_minimal .icon {
+	float: left;
+	padding: 0 6px 2px 0;
+}
+
+.module_on_white_minimal h2 {
+	border-bottom: 1px solid #444444;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 0 8px 7px 8px;
+}
+
+.module_on_white_minimal h3 {
+	background-color:#EEEEEE;
+	color:#222222;
+	font-size:11px;
+	font-weight:normal;
+	margin:0pt;
+	padding: 0px 8px 2px 8px;
+}
+
+.module_on_white_minimal .h3link {
+	float: right;
+  padding-right: 5px;
+}
+
+.module_on_white_minimal .body {
+	padding: 6px;
+}
+
+.module_on_white {
+	margin-top: 10px;
+}
+
+.module_on_white h2 {
+	color:#3B5998;
+	background:#D8DFEA none repeat scroll 0%;
+	border-top:1px solid #3B5998;
+	font-size:11px;
+	font-weight:bold;
+	line-height:17px;
+	margin:0pt;
+	padding:0pt 8px;
+}
+
+.module_on_white .h3link {
+	float: right;
+    padding-right: 5px;
+}
+
+.module_on_white h3 {
+	background-color:#EEEEEE;
+	border-top:1px solid #777777;
+	color:#222222;
+	font-size:11px;
+	font-weight:normal;
+	margin:0pt;
+	padding:2px 8px;
+}
+
+.module_on_white .body {
+	padding: 6px;
+}
+
+.module_on_grey,
+.module_on_white_outlined {
+	border: 1px solid #BBBBBB;
+	margin-top: 10px;
+}
+
+.module_on_grey h2 {
+	background: #6D84B4;
+	color: #FFFFFF;
+	font-size: 11px;
+	font-weight: bold;
+	padding: 4px 8px;
+/*	position: relative; */
+}
+
+.module_on_grey .h3link {
+    float: right;
+    padding-right: 10px;
+    background-color: #EEEEEE;
+    display: block;
+    position: relative;
+}
+
+.module_on_grey h3 {
+	background-color:#EEEEEE;
+	border-top: 1px solid #CCCCCC;
+	color:#444444;
+	font-size:11px;
+	font-weight:normal;
+	margin:0pt;
+	padding: 2px 0px 2px 8px;
+	position: relative;
+}
+
+.module_on_grey .body,
+.module_on_white_outlined .body {
+	padding: 6px 6px;
+	background-color: #FFFFFF;
+/*	position: relative; */
+}
+
+.module_on_white_outlined h2 {
+  color: #000000;
+  font-size: 12px;
+  font-weight: bold;
+	padding: 4px 8px;
+}
+
+.module_on_white_outlined h3 {
+	background-color:#EEEEEE;
+	color:#222222;
+	font-size:11px;
+	font-weight:normal;
+	margin:0pt;
+	padding: 0px 8px 2px 8px;
+}
+
+.module_on_white_outlined .h3link {
+	float: right;
+  padding-right: 5px;
+}
+
+.module_on_white_outlined .icon {
+  float: left;
+  padding: 2px;
+  padding-right: 8px;
+}
+
+.body p {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.topflush {
+    padding-top: 0;
+    margin-top: 0;
+}
+
+/*** MISC UTILITY CLASSES *******************************************************************************/
+/********************************************************************************************************/
+
+img.inline {
+  vertical-align: middle;
+}
+
+a.black {
+  color: #000000 !important;
+  text-decoration: underline !important;
+}
+
+.arial {
+  font-family: arial;
+}
+
+.stretcher {
+	clear: both;
+	height: 1px;
+	width: 100%;
+	overflow: hidden;
+}
+
+.stretch {
+  overflow: hidden;
+  width: 100%;
+}
+
+.linkblock {
+	display: block;
+}
+
+.highlight,
+.highlighted {
+  background-color: #FFFFDD;
+}
+
+.centered {
+  text-align: center;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.right-aligned {
+  text-align: right;
+}
+
+.clearfix:after {
+    content: "."; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+}
+
+.clearfix { display: inline-block; }
+
+.hide,
+.hidden {
+  display: none !important;
+}
+
+.show,
+.shown,
+.visible {
+  display: block !important;
+} 
+
+.underline {
+  text-decoration: underline;
+}
+
+/* Hides from IE-mac \*/
+* html .clearfix {height: 1%;}
+.clearfix {display: block;}
+/* End hide from IE-mac */
+/* @end */
+
+/**************************************************************************************************/
+/*  APPLICATION SPECIFIC CSS **********************************************************************/
+/**************************************************************************************************/
+/*  These classes relate to the ones above, they just override them */
+/**************************************************************************************************/
+
+.pagination_header_footer {
+	width: 590px; 
+	text-align: right; 
+	font-size: 16px;
+}
+
+.load_flash {
+  display: none;
+}
+
+/*** Global application styles ******/
+/***********************************/
+
+.page_body {
+  border: 0;
+}
+
+.page_body .beta_label {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  background-image: url(/images/layouts/beta_label.gif);
+  width: 68px;
+  height: 68px;
+  z-index: 0;
+}
