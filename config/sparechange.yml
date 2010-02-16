@@ -1,0 +1,8 @@
+development:
+  dev_id: 1253161288416
+  secret_key: 2MzUyMDEyNTMxNjEyODg0MTc=
+
+production:
+  dev_id: 1253161288416
+  secret_key: 2MzUyMDEyNTMxNjEyODg0MTc=
+
