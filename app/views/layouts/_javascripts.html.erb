@@ -1,7 +1,9 @@
 <script>
-  var api_key     = '<%= api_key %>';
-  var xd_receiver = '<%= xd_receiver %>';
+  var api_key           = '<%= api_key %>';
+  var xd_receiver       = '<%= xd_receiver %>';
+  var session_id        = '<%= @rails_session_id %>';
 </script>
 
 <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
 
+<%= javascript_include_tag :all, :cache => 'all', :recursive => true %>
