@@ -1,0 +1,29 @@
+
+<div class="column">
+  <div class="module_on_white">
+    <div class="body">
+      <b>Click your donation method below.</b> This is the alternate donation system if you have trouble with SpareChange. 
+    </div>
+  </div>
+  
+  <div class="module_on_white">
+    <div class="body shop_items_container">
+      
+      <div class="custom_tabs">
+        <div class="custom_tab first selected shop_tab">
+          Donate
+        </div>
+      </div>
+
+      <div class="shop_items">
+
+        <%= gambit_pay_panel %>
+
+        <div class="stretcher"></div>
+      </div>
+    </div>
+  </div>
+  * If the grey box above is empty, disable any Ad Blocker software or 
+  <%= link_to "<b>open in a new window</b>", gambit_pay_url, :target => "_blank" %>
+</div>
+
