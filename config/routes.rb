@@ -1,12 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :accessories
 
-  map.resources :categories
-
-  map.resources :gardens
-
-  map.resources :scenes
-
+  # More info: http://api.rubyonrails.org/classes/ActionController/Resources.html
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
