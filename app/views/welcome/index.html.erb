@@ -1,8 +1,16 @@
 <p>This page is accessible without requiring install</p>
 
-<%= link_to   "play game", 
-              { :controller => :play,
-              :host       => 'apps.facebook.com',
-              :only_path  => false,
-              :canvas     => true },
-              { :target     => '_top' } %>
+<p>
+  <%= link_to   "play game", 
+                { :controller => :play,
+                :host       => 'apps.facebook.com',
+                :only_path  => false,
+                :canvas     => true },
+                { :target     => '_top' } %>
+  (this will prompt for normal login)
+</p>
+
+<p>
+  <%= link_to   "play game", "#", :onclick => "return welcome_require_session();" %>
+  (will use streamlined login)
+</p>

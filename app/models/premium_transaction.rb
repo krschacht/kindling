@@ -1,13 +1,12 @@
 class PremiumTransaction < ActiveRecord::Base
 
   belongs_to :user
-#  has_one :gambit_postback
-#  has_one :sparechange_postback
+  has_one :gambit_postback
+  has_one :sparechange_postback
 #  has_one :item
 
   def self.processor_types
-#    @types ||= [GambitTransaction, SparechangeTransaction]
-    @types ||= []
+    @types ||= [GambitTransaction, SparechangeTransaction]
   end    
 
   def self.types
