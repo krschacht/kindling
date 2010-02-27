@@ -1,0 +1,33 @@
+<div class="full_column">
+
+  <div class="title_container">
+    <div class="direct_link">(<%= link_to( "forum link", forum_path( @forum ), :target => "_top" ) %>)</div>
+
+    <%= root_forum_tree @forum %>
+    <%= h( @forum.title ) %>
+  </div>
+
+  <div class="module_on_white topic_list">
+
+    <div id="topics">
+      <% if @hide_topics %>
+      <div class="collapsed_topic_action">
+        ... <%= link_to "View all #{@forum.entity.pluralize} in this forum", forum_path( @forum ), :target => '_top' %>
+      </div>
+      <% else %>
+
+        <% @topics.each do |topic| %>
+          <%= render :partial => 'topics/topic',
+                     :object  => topic %>
+
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= will_paginate( @topics ) unless @hide_topics %>
+
+  <a name="new"></a>
+
+  <%= render :partial => "new_topic_form", :locals => { :forum => @forum } %>
+

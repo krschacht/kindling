@@ -1,0 +1,15 @@
+
+<div class="topic_view">
+
+  <%= render :partial => "topics/topic_plain", 
+             :object  => @topic,
+             :locals  => { :show_forum_tree => true } %>
+
+  <div class="posts_container" id="posts_<%= @topic.id %>">
+    <% @posts.each do |post| %>
+      <%= render :partial => "posts/post_plain", :object => post %>
+    <% end %>
+  </div>
+                             
+</div>
+

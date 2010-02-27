@@ -9,6 +9,8 @@ class ApplicationController < ActionController::Base
                 :api_key, 
                 :xd_receiver,
                 :current_user,
+	              :update_relationship,
+	              :invites_sent_msg,
                 :action_name_safe
 
   attr_reader   :current_user
@@ -25,10 +27,6 @@ class ApplicationController < ActionController::Base
                 :select_tab
 
   protect_from_forgery # See ActionController::RequestForgeryProtection for details
-
-  def api_key
-    Facebooker.facebooker_config['api_key']
-  end
 
   def xd_receiver
     "/xd_receiver.htm"
@@ -90,6 +88,16 @@ class ApplicationController < ActionController::Base
     instance_variable_set( "@#{controller_name}_#{action_name_safe}_tab", true )
   end
 
-  # Scrub sensitive parameters from your log
-  # filter_parameter_logging :password
+  def update_relationship
+    if actor && params[:r] && params[:r] =~ /(\d+)/
+      r = Relationship.accepted_invitation( actor.id, $1.to_i )
+    end
+  end
+
+  def invites_sent_msg
+    unless params[:invites_sent].blank?
+      flash.now[:success_msg] = "Your invitations have been sent!"
+    end
+  end
+
 end

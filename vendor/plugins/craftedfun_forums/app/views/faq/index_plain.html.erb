@@ -1,0 +1,17 @@
+<h2>Frequently Asked Questions</h2>
+<div class="body">
+
+  <% @faq_pairs.each_index do |i| %>
+    <div>
+      <a name="question_<%= i %>"></a>
+      <li>
+        <%= @faq_pairs[i][:question] %>
+      </li>
+      <div>
+        <%= @faq_pairs[i][:answer] %>
+      </div>
+    </div>
+  <% end %>
+
+  <br><br>Question not answered?  <%= link_to "Visit the forum to post your question", "/forums" %>, we're happy to help!
+</div>

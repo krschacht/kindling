@@ -1,0 +1,38 @@
+
+<fb:fbml>
+  <center>
+    
+    <fb:request-form
+      action="<%= url_for( :controller => :relationships,
+                           :action     => :invites_sent,
+                           :host       => "apps.facebook.com",
+                           :only_path  => false,
+                           :canvas     => true,
+                           :invites_sent => true,
+                           :fb_force_mode => 'fbml' ) %>"
+      method="post"
+      invite="true"
+      type="<%= FacebookClient.app_name %>"
+      content="<%= h( %Q( I'm playing this awesome new game! Join my
+  army before I attack you!
+    <fb:req-choice
+      url="#{url_for( :controller => :units,
+                      :action     => :index,
+                      :host       => "apps.facebook.com",
+                      :only_path  => false,
+                      :canvas     => true,
+                      :s          => 'invite',
+                      :r          => actor.id )}"
+      label="Click here! Play Army Men" /> ) ) %>">
+
+      <input type="hidden" name="invites_sent" value="true" />
+
+      <fb:multi-friend-selector showborder="false"
+                                cols="4"
+                                email_invite="false"
+                                exclude_ids="<%= @exclude_ids %>"
+                                actiontext="Invite your friends to increase your squad size!" />
+    </fb:request-form>
+
+  </center>
+</fb:fbml>

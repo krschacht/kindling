@@ -1,0 +1,43 @@
+<div class="module_on_white">
+  <h2>Start a new <%= forum.entity %></h2>
+  <div class="body">
+    <form action="<%= topics_path %>" method="post" id="post_form">
+      <div class="error_msg hidden">
+        Be sure to provide both a title and body.
+      </div>
+
+      <input type="hidden" name="forum_id" value="<%= forum.id %>"></input>
+
+      <div class="subject">
+        <div class="label">Your <%= forum.entity.titleize %> Title?</div>
+        <div class="textbox">
+          <input type="text" name="post[title]" class="question" maxlength="55"></input>
+
+          <div class="caption highlight">
+            Please write descriptive titles. This helps others find useful <%= forum.entity.pluralize %>.
+          </div>
+        </div>
+      </div>
+      <div class="stretcher"></div>
+
+      Body:<br>
+
+      <%= render :partial => "topics/post_form_faq" if forum.entity.to_sym == :bug %>
+
+      <input type="hidden" id="session_id" name="session_id" value="<%= request.session_options[:id] -%>" />
+      <textarea name="post[body]" rows="8" cols="50" class="post_compose_body"></textarea>
+
+      <% if forum.entity.to_sym == :bug %>
+      <div>
+        <input type="checkbox" name="checklist" value="yes" onclick="$('#post_form_btn').removeClass('disabled');"/>
+        Please check to indicate you <b>read the bug checklist</b> above. Thanks!
+      </div>
+      <% end %>
+      <div>
+        <%= js_button "Post",
+              :js     => "submit_post_form();",
+              :id     => "post_form_btn",
+              :class  => "submit_post_form_button" unless current_user.banned? %>
+      </div>
+    </form>
+</div>

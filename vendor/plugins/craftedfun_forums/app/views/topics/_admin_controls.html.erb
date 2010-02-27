@@ -1,0 +1,50 @@
+
+<div class="topic_admin_controls">
+  <%= topic_lock_control( @topic ) %> 
+  <%= topic_sticky_control( @topic ) %>
+  
+  <% if @forums %>
+    <br>
+    Move to: 
+      <%= collection_select( "topic", "forum_id", @forums, 
+            :id, :trimmed_title, {}, { 
+              :onchange => "$('.move_button_container').show();" } ) %>
+
+    <span class="move_button_container">
+      <%= js_button( "Move",
+            :js     => "move_topic( #{@topic.id}, $('#topic_forum_id').val() )",
+            :class  => "move_button" )
+      %>
+    </span>
+
+    <br>
+
+    Remove & merge into: 
+      <%= collection_select( "topic", "id", @topic.forum.topics, 
+            :id, :trimmed_title, {}, { 
+              :onchange => "$('.merge_button_container').show();" } ) %>
+
+    <span class="merge_button_container">
+      <%= js_button( "Merge",
+            :js     => "merge_topic( #{@topic.id}, $('#topic_id').val() )",
+            :class  => "merge_button" )
+      %>
+    </span>
+    
+    <br>
+    
+    <form action="/topics/edit/<%= @topic.id %>" method="post" id="save_topic_<%= @topic.id %>_title_form">
+      
+      Edit title: <input type="text" value="<%= @topic.title %>" name="topic[title]" 
+                    onkeypress="$('.edit_title_button_container').show();" />
+      <span class="edit_title_button_container">
+        <%= js_button( "Save Edit",
+              :js     => "save_topic( #{@topic.id} )" )
+        %>
+      </span>
+      
+    </form>
+    
+  <% end %>
+  
+</div>

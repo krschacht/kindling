@@ -1,0 +1,8 @@
+development:
+  api_key: 0123456789
+  secret: 0123456789
+  api_id: 0123456789
+  canvas: farmville
+  properties:
+    callback_url: http://my.callback_url.com/
+    application_name: "FarmVille"

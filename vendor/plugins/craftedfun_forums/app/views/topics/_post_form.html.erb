@@ -1,0 +1,57 @@
+<% locked ||= false %>
+
+<div class="reply_form">
+  <div class="title">
+    <% if locked %>
+      <span class="red">This is locked</span>,
+    <% else %>
+      Reply below
+    <% end %>
+
+    <% if @forum && @forum.post_allowed_for_user?( current_user ) %>
+       or <%= link_to "post a new #{@forum.entity}",
+                              { :controller => :forums,
+                              :action => :new,
+                              :id => @forum },
+                              { :target => "_top" } %>
+    <% end %>
+  </div>
+
+  <% unless locked && ! current_user.moderator? %>
+    <form action="<%= posts_path %>" method="post" id="post_form_<%= topic.id %>">
+      <div class="error_msg hidden">
+        Please be sure to provide a body.
+      </div>
+
+      <% if @forum.entity.to_sym == :bug %>
+
+        <% if topic.last_post_at + 5.days < Date.today %>
+          <div class="bug_steps highlight">
+            This bug topic has been inactive for several days. Unless you've
+            already written above, it's usually better to
+              <b><%= link_to "post a new #{@forum.entity}",
+                                    { :controller => :forums,
+                                      :action => :new,
+                                      :id => @forum },
+                                      :class => "nowrap" %></b>
+            instead. This will help it get noticed plus you'll get notified when someone replies.
+          </div>
+        <% else %>
+          <%= render :partial => "topics/post_form_faq" %>
+        <% end %>
+
+      <% end%>
+
+
+      <input type="hidden" name="topic_id" value="<%= topic.id %>" />
+      <input type="hidden" id="session_id" name="session_id" value="<%= request.session_options[:id] -%>" />
+      <input type="hidden" id="flash_version" name="flash_version" value="" />
+      <textarea name="post[body]" rows="8" cols="50" class="post_compose_body"></textarea>
+      <div>
+        <%= js_button "Post",
+              :js    => "submit_post_form( #{topic.id} );",
+              :class => "submit_post_form_button" unless current_user.banned? %>
+      </div>
+    </form>
+  <% end %>
+</div>

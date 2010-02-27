@@ -1,0 +1,36 @@
+
+<div class="full_column forum_list">
+
+
+  <div class="module_on_white topic_list">
+    <h2><%= link_to( "Frequently Asked Questions", "/faq" ) %></h2>
+    
+    <div id="topics"> 
+      <% @faq_pairs.each_index do |i| %>
+
+      <div class="topic_container">
+        <div class="topic">
+          <%= link_to @faq_pairs[i][:question], "/faq?default_question_id=#{i}#question_#{i}" %>
+        </div>
+      </div>
+
+      <% end %>
+    </div>
+  </div>
+    
+  <% @forums.each do |forum| %>
+    
+  <div class="module_on_white topic_list">
+    <h2><%= link_to( h( forum.title ), forum_path( forum ) ) %></h2>
+    
+    <div id="topics"> 
+      <% forum.topics.find( :all, :include => :last_post_author, :limit => 5 ).each do |topic| %>
+        <%= render :partial => 'topics/topic_plain', 
+                   :object  => topic %>
+
+      <% end %>
+    </div>
+  </div>
+
+  <% end %>
+</div>

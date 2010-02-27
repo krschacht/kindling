@@ -1,0 +1,44 @@
+<div class="full_column forum_list">
+
+  <div class="module_on_white_outlined">
+    <h2>Welcome to our forums</h2>
+    <div class="body">
+      <b>New player?</b>  Check out <b><%= link_to "Check out Frequently Asked Questions", {:controller => :faq}, {:target => '_parent' } %></b><br /><br />
+      Let us know what you think! And let us know if you have any questions or bugs.<br /><br />
+    </div>
+  </div>
+
+  <div class="module_on_white_outlined hidden" style="border: 3px solid #3B5998;">
+    <div class="body">
+      <b>We need your help</b> to be recognized by Facebook! <b><%= link_to "Visit this page", "http://www.facebook.com/apps/application.php?id=90264094632&v=app_6261817190", :target => "_blank" %></b> to rate this app & become a "fan". Thanks!
+    </div>
+  </div>
+
+  <div class="forum_feature_links">
+    <b class="highlight">Waiting on a reply?</b>
+    <%= link_to "View all topics you started", "/topics/started_by_user/#{current_user.id}", {:target => '_parent' } %> -- or --
+    <%= link_to "View all topics you posted in", "/topics/posted_in_by_user/#{current_user.id}", {:target => '_parent' } %>
+  </div>
+
+  <% if current_user.moderator? %>
+  <div class="forum_feature_links">
+    <div class="important"><b>Moderators:</b> A topic is highlighted in red if it's been flagged and *no*
+      Moderators have replied. You're welcome to help with any topics but these are the best ones to start with.
+    </div>
+  </div>
+
+  <div class="module_on_white topic_list">
+    <h2>All flagged topics</h2>
+    <h3>Showing all flagged topics</h3>
+
+    <div id="topics">
+      <% @flagged_topics.each do |topic| %>
+      <%= render :partial => 'topics/topic',
+      :object  => topic %>
+
+      <% end %>
+    </div>
+    <% end %>
+
+
+    <%= render :partial => 'forums/forum_preview', :collection => @forums %>

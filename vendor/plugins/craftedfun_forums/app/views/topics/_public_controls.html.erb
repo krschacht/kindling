@@ -1,0 +1,17 @@
+
+<div class="topic_public_controls <%= 'flagged' if @topic.flagged? %>">
+  <div class="flag_control_explanation centered tip" title="Administrators and moderators are not able to read every topic. Hopefully within 24 hours of posting you will get a good answer from other wizards. If not, after 24 hours, you or anyone else may flag the topic. Administrators or moderators will review all flagged topics.">
+    <%= topic_flag_control( @topic ) %>
+    <%= link_to "what's this?", "#",
+        :class => "tip",
+        :style => "text-decoration: underline;" %>
+  </div>
+  <div class="flag_control_explanation centered <%= 'hide' if @topic.flaggable? %>"
+       style="padding-right: 60px;">
+    enables after 24 hours
+  </div>
+
+  <div class="flagged_explanation">
+    <%= topic_flag_control( @topic ) %> <b>This topic has been flagged.</b> An administrator or moderator will review soon.
+  </div>
+</div>

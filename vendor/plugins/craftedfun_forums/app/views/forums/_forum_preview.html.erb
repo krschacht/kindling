@@ -1,0 +1,41 @@
+<% num_to_show ||= 5 %>
+<% target ||= "_parent" %>
+
+<div class="module_on_white topic_list">
+  <h2><%= link_to( h( forum_preview.title ), forum_path( forum_preview ), :target => target ) %> <%= "&nbsp;&nbsp;(#{forum_preview.description})" unless forum_preview.description.empty? %></h2>
+  <h3>
+    <div class="h3link">| <%= link_to "View all", forum_path( forum_preview ), :target => target %></div>
+    <div class="h3link"><%= link_to "Start New #{forum_preview.entity.titleize}",
+                                        url_for( :controller => :forums,
+                                        :action => :new,
+                                        :id => forum_preview),
+                                        :target => target  if forum_preview.post_allowed_for_user?( current_user ) %>
+    </div>
+
+    Showing <%= [num_to_show, forum_preview.topic_count].min %> of <%= forum_preview.topic_count %> total <%= forum_preview.entity.pluralize %>
+  </h3>
+
+  <div id="topics">
+  <%
+    case forum_preview.mode_is
+    when :forum
+      forum_preview.topics_for_forum.find( :all, :include => :last_post_author, :limit => num_to_show ).each do |topic| %>
+        <%= render :partial => 'topics/topic',
+             :object  => topic,
+             :locals  => {  :target => target,
+                            :forum => forum_preview } %>
+
+        <% end
+
+    when :blog
+      forum_preview.topics_for_blog.find( :all, :include => :last_post_author, :limit => num_to_show ).each do |topic| %>
+        <%= render :partial => 'topics/topic',
+             :object  => topic,
+             :locals  => { :target => target,
+                           :forum => forum_preview  } %>
+        <% end
+
+    end
+  %>
+  </div>
+</div>

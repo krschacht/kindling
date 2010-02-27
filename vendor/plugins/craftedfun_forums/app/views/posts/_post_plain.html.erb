@@ -1,0 +1,9 @@
+<div>
+  <h4>
+    <%= post_plain.author.full_name if post_plain.author %>
+  </h4>
+  <div class="body">
+    <%= h( post_plain.body ).gsub(/\n/, '<br>').gsub(/\[spoiler\](.*?)\[\/spoiler\]/, "**spoiler**") %>
+  </div>
+</div>
+

@@ -1,0 +1,31 @@
+<% content_for :stylesheets do %>
+  .dashboard_tab_wrapper { display: none; }
+  
+  .inner_body .dashboard_tab_wrapper {
+    display: block;
+  }
+<% end -%>
+
+<% content_for :content do %>
+
+  <div class="dashboard_tab_wrapper">
+    <div class="dashboard_backlink">
+      <%= link_to( "Back to #{ APP_CONFIG['app_name'] }", 
+            { :controller => :play, 
+              :action     => :index,
+              :id         => nil,
+              :host       => 'apps.facebook.com',
+              :only_path  => false,
+              :canvas     => true }, 
+            { :target     => '_top' } ) %>          
+    </div>
+
+    <%= render :partial => "layouts/forum_tabs" %>
+
+  </div>
+
+  <%= yield %>
+
+<% end -%>
+
+<%= render :file => 'layouts/application' %>

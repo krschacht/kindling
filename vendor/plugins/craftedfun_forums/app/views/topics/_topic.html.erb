@@ -1,0 +1,63 @@
+<% forum            ||= nil %>
+<% @forum           ||= forum %>
+<% target           ||= "_top" %>
+<% show_forum_tree  ||= false %>
+
+<div  class="topic_container
+        <%= "important" if  flagged_color_waiting_on_moderator?( topic ) %>
+        <%= "hidden"    if  flagged_hide_waiting_on_users?( topic ) %>">
+
+  <div class="topic">
+
+    <% if show_forum_tree %>
+
+      <div class="direct_link">(<%= link_to( "#{@forum.entity} link", topic_path( topic ), :target => target ) %>)</div>
+
+      <%= root_forum_tree @forum %>
+      <%= link_to( h( @forum.title ), forum_path( @forum ), :target => target ) %> &raquo;
+      <span id="topic_<%= topic.id %>_title"><%= h( topic.title ) %></span>
+
+    <% else %>
+
+      <%= image_tag( "icons/note.png", :class => "topic_icon tip_right", :title => "This topic is sticky so it always appears at the top of the list" ) if topic.sticky? %>
+      <%= image_tag( "icons/key_grey.png", :class => "topic_icon tip_right", :title => "This topic is locked, you can read it but not post inside it.") if topic.locked? %>
+      <%= image_tag( "icons/flag_blue.png", :class => "topic_icon tip_right", :title => "This topic is flagged so a Town Official or Town Elder will review it." ) if topic.flagged? %>
+
+      <%= link_to h( topic.title ),
+                  topic_path( topic, :last_post_at => topic.last_post_at.strftime("%m%d%Y%H%M%S") ),
+                  :class => ( topic.last_post_author == current_user ? 'read' : '' ),
+                  :target => target %>
+
+    <% end %>
+
+  </div>
+  <div class="topic_info">
+
+    <div class="first_post_info">
+
+      started by
+        <% if topic.author %>
+          <%= fb_name(topic.author.facebook_id) -%>
+        <% end %>
+
+    </div>
+
+    <div class="last_post_info">
+      <span class="post_count">
+        <%= pluralize( topic.post_count, "post" ) %>.
+      </span>
+
+      last post
+      <%= time_ago_in_words( topic.last_post_at ) %> ago
+
+
+      <% if topic.last_post_author %>
+        <%= "by " + fb_name(topic.last_post_author.facebook_id) -%>
+      <% end %>
+
+    </div>
+    <div class="stretcher"></div>
+
+  </div>
+</div>
+

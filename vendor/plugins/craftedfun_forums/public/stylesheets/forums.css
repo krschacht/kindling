@@ -1,0 +1,314 @@
+.forum_search {
+  width: 300px;
+  text-align: right;
+  position: absolute;
+  right: 30px;
+  z-index: 10;
+}
+
+.forum_search form {
+  margin: 0;
+}
+
+.forum_search input.textbox {
+  width: 165px;
+  border: 2px solid #3B5998;
+  padding: 3px;
+}
+
+.forums .forum_search,
+.topics .forum_search,
+.posts .forum_search {
+  display: block;
+}
+
+/** Forum display **/
+
+.forum_list .module_on_white {
+  margin-top: 25px;
+}
+
+.forum_list .forum_feature_links {
+  margin-top: 20px;
+}
+
+/** Topic display **/
+
+.topic_preview_container {
+  display: none;
+}
+
+.topic_preview_toggle {
+  padding: 0 0 2px 6px;
+  border-bottom: 1px solid #CCCCCC;  
+  background-color: #E9F0FF;
+}
+
+.topic_preview_toggle.you {
+  background-color: #FFD2DE;
+}
+
+.move_button_container,
+.merge_button_container,
+.edit_title_button_container {
+  display: none;
+}
+.topic_container,
+.title_container {
+  border-bottom: 1px solid #CCCCCC;
+  padding: 7px 10px;
+}
+.topic_view .topic_container,
+.title_container {
+  background-color: #F7F7F7;
+  border-top: 1px solid #898989;
+}
+.topic_container .topic_info {
+  padding-left: 4px;
+}
+.topic_container .topic_icon {
+  float: right;
+}
+.important {
+  background-color: #FFEBE8;
+  padding: 7px 10px;
+  line-height: 1.3; /* solves IE disappearing text bug */
+}
+
+/** When reading a topic **/
+
+.topic_view .topic_info {
+  display: none;
+}
+.topic_view .topic,
+.title_container {
+  font-size: 14px;
+  font-weight: bold;
+}
+.topic_view .topic_admin_controls {
+  padding: 5px 10px;
+}
+.topic_view .topic_public_controls {
+  padding: 5px;  
+  padding-top: 15px;
+}
+.topic_view .flagged {
+  background-color: #DFFFE8;
+  border-color: #DFFFE8;
+  border-style: solid;
+  border-width: 6px 6px 2px;
+}
+.topic_view .flag_control_explanation {
+  font-size: 12px;
+  color: #999999;
+}
+.topic_view .flagged .flag_control_explanation {
+  display: none;
+}
+.topic_view .flagged_explanation {
+  display: none;
+  font-size: 14px;
+  color: #225100;
+}
+.topic_view .flagged .flagged_explanation {
+  display: block;
+}
+.topic_view .page_of_posts {
+  display: none;
+}
+
+/***********************************/
+
+.topic {
+  font-size: 12px;
+  padding-bottom: 2px;
+  font-weight: bold;
+}
+.post_count {
+  color: #333333;
+}
+.last_post_info {
+  color: #777777;
+  float: left;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 375px;
+}
+.first_post_info {
+  color: #AAAAAA;
+  float: right;
+  overflow: hidden;
+  text-align: right;
+  white-space: nowrap;
+  width: 200px;
+}
+.last_post_info a,
+.last_post_info a:link,
+.last_post_info a:visited {
+  color: #777777;  
+  text-decoration: underline;
+}
+.first_post_info a,
+.first_post_info a:link,
+.first_post_info a:visited {
+  color: #AAAAAA;  
+  text-decoration: underline;
+}
+.last_post_info a:hover,
+.first_post_info a:hover {
+  text-decoration: none;
+}
+.collapsed_topic_action {
+  padding: 10px;
+}
+.forums .topic_container .topic a:visited,
+.forums .topic_Container .topic a.read {
+  color: #999999;
+}
+
+
+/** Post display ***/
+
+.post_container {
+  
+}
+.wallkit_post {
+  border-bottom: 1px solid #D8DFEA;
+  border-top: 1px solid #D8DFEA;
+  margin: 5px 0;
+  padding: 5px 0;
+  background-color: #FFFFFF;
+}
+.wallkit_postcontent .body .spoiler {
+  border: 1px solid black;
+  color: #FFFFFF;
+}
+.elder_post .wallkit_postcontent .body .spoiler,
+.admin_post .wallkit_postcontent .body .spoiler {
+  color: #D8DFEA;
+}
+.official_post .wallkit_postcontent .body .spoiler {
+  color: #F4E4D4;
+}
+.wallkit_post.admin_post,
+.wallkit_post.elder_post {
+  background-color: #D8DFEA;
+}
+.wallkit_post.official_post {
+  background-color: #F4E4D4;
+}
+
+.wallkit_post .wallkit_profilepic {
+  float:left;
+  width:50px;
+}
+.wallkit_post .wallkit_postcontent {
+  margin-left:50px;
+  padding-left:10px;
+}
+.wallkit_post div.wallkit_actionset {
+  font-size:9px;
+  padding-bottom:3px;
+}
+.wallkit_post .wallkit_postcontent div {
+  padding:3px 0;
+}
+.wallkit_post .wallkit_postcontent h4 {
+  font-weight:normal;
+  padding:0 5px 3px 0;
+  font-size: 12px;
+  color: #333333;
+  margin: 0;
+}
+.wallkit_post .wallkit_postcontent h4 a {
+  font-weight: bold;
+}
+.wallkit_post .body {
+}
+.wallkit_post .browser_info {
+  color: #AAAAAA;
+  font-weight: bold;
+  margin-top: 10px;
+  display: none;
+}
+
+.wallkit_post .edit_links {
+  display: none;
+}
+
+.wallkit_post.selected {
+  background-color: #e7e7e7;
+}
+
+.viewing_as_admin .browser_info,
+.viewing_as_official .browser_info,
+.viewing_as_elder .browser_info {
+  display: block;
+} 
+
+.viewing_as_official .edit_links,
+.viewing_as_elder .edit_links {
+  display: inline;
+}
+
+/** New post form **/
+
+.bug_steps {
+  display: none;
+  overflow: hidden;
+  border: 1px solid #CCCCCC;
+  padding: 5px 10px;
+}
+
+.bug_steps p {
+  padding: 0; 
+  margin: 0; 
+  margin-bottom: 5px; 
+  font-weight: bold;
+}
+
+.reply_form form {
+  margin-top: 5px;
+}
+
+.subject .label {
+  width: 110px;
+  float: left;
+}
+
+.subject .textbox {
+  float: left;
+}
+
+.subject .textbox .question {
+  width: 300px;
+}
+
+.subject .textbox .caption {
+  font-size: 11px;
+}
+
+.post_compose_body {
+  margin-top: 5px;
+  width: 500px;
+  height: 130px;
+}
+
+
+/** Other ***/
+
+a.chat_link {
+  background-color: yellow;
+}
+
+.direct_link {
+  float: right;
+  font-weight: normal;
+  font-size: 11px;
+}
+
+.bottom_jump {
+  text-align: right;
+  padding-top: 3px;
+}
+
