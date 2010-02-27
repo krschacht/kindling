@@ -13,8 +13,8 @@ class ApplicationController < ActionController::Base
 
   attr_reader   :current_user
 
-  ensure_authenticated_to_facebook
-  ensure_application_is_installed_by_facebook_user
+#  ensure_authenticated_to_facebook
+#  ensure_application_is_installed_by_facebook_user
 
   before_filter :set_facebook_session,
                 :set_current_user,
