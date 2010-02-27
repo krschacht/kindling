@@ -1,0 +1,5 @@
+cp ~/.bashrc ~/.bashrc_temp
+echo "export RAILS_ENV=keith_development" >> ~/.bashrc_temp
+bash --rcfile ~/.bashrc_temp
+
+

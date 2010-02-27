@@ -48,5 +48,8 @@ class User < ActiveRecord::Base
   def award_new_player_premium_currency
     NewPlayerTransaction.record( self, 100 )
   end
+
+  def full_name
+  end
   
 end
