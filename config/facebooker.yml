@@ -2,10 +2,10 @@
 # Tunnel configuration is only needed if you are going to use the facebooker:tunnel Rake tasks
 # Your callback url in Facebook should be set to http://public_host:public_port
 
-development:
-  api_key: 6535b158e7c39c800864794452ffa351
-  secret_key: dc22178f336969105809b40ab8beb772
-  canvas_page_name:  schacht-tictactoe
+keith_development:
+  api_key: 7c5d9d041a99c03159bbaf537ac42791
+  secret_key: ac968876a0fa4eb1013fe120a30f218e
+  canvas_page_name:  schacht
   callback_url: http://web1.tunnlr.com:10107
   pretty_errors: false
   set_asset_host_to_callback_url: true

@@ -1,7 +1,7 @@
 
-class CreateInviteSents < ActiveRecord::Migration
+class CreateInvites < ActiveRecord::Migration
   def self.up
-    create_table :invits do |t|
+    create_table :invites do |t|
       t.integer   :user_id
       t.integer   :number_sent
 
