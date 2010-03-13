@@ -159,7 +159,7 @@ class RailsIntegrationTestForFBConnect < Test::Unit::TestCase
   def setup
     Facebooker.apply_configuration({
       'api_key'          => '1234567',
-      'canvas_page_name' => 'facebook_app_name',
+      'canvas_name' => 'facebook_app_name',
       'secret_key'       => '7654321' })
     @controller = FBConnectController.new
     @request    = ActionController::TestRequest.new
@@ -181,7 +181,7 @@ class RailsIntegrationTestForNonFacebookControllers < Test::Unit::TestCase
   def setup
     Facebooker.apply_configuration({
       'api_key'          => '1234567',
-      'canvas_page_name' => 'facebook_app_name',
+      'canvas_name' => 'facebook_app_name',
       'secret_key'       => '7654321' })
     @controller = PlainOldRailsController.new
     @request    = ActionController::TestRequest.new
@@ -288,7 +288,7 @@ class RailsIntegrationTest < Test::Unit::TestCase
   def setup
     Facebooker.apply_configuration({
       'api_key'          => '1234567',
-      'canvas_page_name' => 'root',
+      'canvas_name' => 'root',
       'secret_key'       => '7654321',
       'set_asset_host_to_callback_url' => true,
       'callback_url'     => "http://root.example.com" })
@@ -553,7 +553,7 @@ class RailsSignatureTest < Test::Unit::TestCase
   def setup
     Facebooker.apply_configuration({
       'api_key'          => '1234567',
-      'canvas_page_name' => 'root',
+      'canvas_name' => 'root',
       'secret_key'       => '7654321' })
     @controller = ControllerWhichRequiresFacebookAuthentication.new
     @request    = ActionController::TestRequest.new
@@ -622,7 +622,7 @@ class RailsHelperTest < Test::Unit::TestCase
   def setup
     Facebooker.apply_configuration({
       'api_key'          => '1234567',
-      'canvas_page_name' => 'facebook',
+      'canvas_name' => 'facebook',
       'secret_key'       => '7654321' })
     @_erbout = ""
     @h = HelperClass.new
@@ -1308,7 +1308,7 @@ class RailsPrettyErrorsTest < Test::Unit::TestCase
   end
   
   def setup
-    Facebooker.apply_configuration('api_key'=>"1234", 'secret_key'=>"34278",'canvas_page_name'=>'mike','pretty_errors'=>true)
+    Facebooker.apply_configuration('api_key'=>"1234", 'secret_key'=>"34278",'canvas_name'=>'mike','pretty_errors'=>true)
     @controller = ControllerWhichFails.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
@@ -1320,7 +1320,7 @@ class RailsPrettyErrorsTest < Test::Unit::TestCase
   end
 
   def test_pretty_errors_disabled_error
-    Facebooker.apply_configuration('api_key'=>"1234", 'secret_key'=>"34278",'canvas_page_name'=>'mike','pretty_errors'=>false)
+    Facebooker.apply_configuration('api_key'=>"1234", 'secret_key'=>"34278",'canvas_name'=>'mike','pretty_errors'=>false)
     silence_warnings do
       post :fail, facebook_params
     end
@@ -1495,7 +1495,7 @@ class RailsRequestFormatTest < Test::Unit::TestCase
   def setup
     Facebooker.apply_configuration({
       'api_key'          => '1234567',
-      'canvas_page_name' => 'facebook_app_name',
+      'canvas_name' => 'facebook_app_name',
       'secret_key'       => '7654321' })
     @controller = FacebookController.new
     @request    = ActionController::TestRequest.new

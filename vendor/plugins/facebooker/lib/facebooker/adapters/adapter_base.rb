@@ -5,7 +5,7 @@ module Facebooker
     require 'active_support/inflector'
     include  ActiveSupport::CoreExtensions::String::Inflections
     def facebook_path_prefix
-      "/" + (@facebook_path_prefix || canvas_page_name || ENV['FACEBOOK_CANVAS_PATH'] || ENV['FACEBOOKER_RELATIVE_URL_ROOT'])
+      "/" + (@facebook_path_prefix || canvas_name || ENV['FACEBOOK_CANVAS_PATH'] || ENV['FACEBOOKER_RELATIVE_URL_ROOT'])
     end
 
     def facebook_path_prefix=(prefix)
@@ -83,7 +83,7 @@ module Facebooker
      FacebookAdapter.new(config)
     end
 
-    [:canvas_page_name, :api_key,:secret_key].each do |key_method|
+    [:canvas_name, :api_key,:secret_key].each do |key_method|
       define_method(key_method){ return facebooker_config[key_method.to_s]}
     end
 

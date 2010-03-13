@@ -56,7 +56,7 @@ module Facebooker
     def apply_configuration(config)
       ENV['FACEBOOK_API_KEY']             = config['api_key']
       ENV['FACEBOOK_SECRET_KEY']          = config['secret_key']
-      ENV['FACEBOOKER_RELATIVE_URL_ROOT'] = config['canvas_page_name']
+      ENV['FACEBOOKER_RELATIVE_URL_ROOT'] = config['canvas_name']
       ENV['FACEBOOKER_API']               = config['api']
       if config.has_key?('set_asset_host_to_callback_url')
         Facebooker.set_asset_host_to_callback_url = config['set_asset_host_to_callback_url'] 
@@ -148,7 +148,7 @@ module Facebooker
       current_adapter.facebook_path_prefix = path
     end
 
-    # Default is canvas_page_name in yml file
+    # Default is canvas_name in yml file
     def facebook_path_prefix
       current_adapter.facebook_path_prefix
     end

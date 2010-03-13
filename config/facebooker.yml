@@ -2,23 +2,33 @@
 # Tunnel configuration is only needed if you are going to use the facebooker:tunnel Rake tasks
 # Your callback url in Facebook should be set to http://public_host:public_port
 
+# For a complete list of properties you can include: 
+#   http://wiki.developers.facebook.com/index.php/ApplicationProperties
+
 keith_development:
   api_key: 7c5d9d041a99c03159bbaf537ac42791
   secret_key: ac968876a0fa4eb1013fe120a30f218e
-  canvas_page_name:  schacht
-  callback_url: http://web1.tunnlr.com:10107
   pretty_errors: false
   set_asset_host_to_callback_url: true
+
+  application_name: "Schacht"
+  canvas_name: schacht
+  callback_url: http://web1.tunnlr.com:10107/
+  authorize_url: http://web1.tunnlr.com:10107/callback/install
+  uninstall_url: http://web1.tunnlr.com:10107/callback/remove
+  
   tunnel:
-                 public_host_username: tunnlr11
-                 public_host: ssh1.tunnlr.com
-                 public_port: 10107
-                 local_port: 3000
+    public_host_username: tunnlr11
+    public_host: ssh1.tunnlr.com
+    public_port: 10107
+    local_port: 3000
+  
+
 
 test:
   api_key: a7dd67a42b0ea8180a511ccf82d6fee3
   secret_key: 275704ec8576de1a475952999ea9b293
-  canvas_page_name: rml-gardens-test
+  canvas_name: rml-gardens-test
   callback_url: 
   pretty_errors: false
   set_asset_host_to_callback_url: true
@@ -31,6 +41,6 @@ test:
 production:
   api_key: API_KEY_FOR_YOUR_HEROKU_FACEBOOK_APP
   secret_key: SECRET_FOR_YOUR_HEROKU_FACEBOOK_APP
-  canvas_page_name: http://apps.facebook.com/HEROKU_DOMAIN_NAME/
+  canvas_name: http://apps.facebook.com/HEROKU_DOMAIN_NAME/
   callback_url: http://HEROKU_DOMAIN_NAME.heroku.com/
   pretty_errors: true

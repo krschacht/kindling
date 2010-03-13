@@ -14,7 +14,7 @@ module Facebooker
       params = args[0]
       params ||= {}
       # json encode any arrays within the params
-      params.keys.each { |k| params[k] = params[k].to_json   if params[k].is_a?( Array ) }
+      params.keys.each { |k| params[k] = params[k].to_json   if params[k].respond_to?(:to_json) }
 
       
       ## Execute call
