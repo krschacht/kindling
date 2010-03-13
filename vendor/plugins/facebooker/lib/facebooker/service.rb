@@ -1,4 +1,4 @@
-#require 'facebooker/parser'
+require 'facebooker/parser'
 module Facebooker
   class Service
     def initialize(api_base, api_path, api_key)

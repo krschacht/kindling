@@ -14,7 +14,7 @@ class GambitController < ApplicationController
                :set_ie7_header,
                :update_install,
                :update_install_source,
-               :select_tab
+               :select_tab,
           :except => :index
 
   before_filter :check_gambit_whitelist, :only => ['postback']

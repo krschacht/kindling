@@ -160,13 +160,6 @@ class Facebooker::UserTest < Test::Unit::TestCase
     @user.get_cookies('name')
   end
 
-  def test_get_profile_photos
-    @user = Facebooker::User.new(548871286, @session)
-    expect_http_posts_with_responses(example_profile_photos_get_xml)
-    photos = @user.profile_photos
-    assert_equal "2357384227378429949", photos.first.aid
-  end
-
   def test_prepare_publish_to_options_pass_only_neccessary_parameters
     options = @user.prepare_publish_to_options(@user, {:message => 'Hey there', :action_links => [:text => 'Link', :href => 'http://example.com']})
     assert_equal(options[:uid], @user.uid)
@@ -206,24 +199,6 @@ class Facebooker::UserTest < Test::Unit::TestCase
     @user.publish_to(@other_user, :message => 'i love you man',:attachment=>attachment)
   end
 
-  def test_comment_on
-    @user = Facebooker::User.new(548871286, @session)
-    expect_http_posts_with_responses(example_comment_on_response)
-    assert_equal('703826862_78463536863', @user.comment_on('703826862_78463536862', :message => 'that was hilarious!'))
-  end
-  
-  def test_add_comment
-    @user = Facebooker::User.new(548871286, @session)
-    expect_http_posts_with_responses(example_add_comment_response)
-    assert_equal('403917', @user.add_comment('test_xid','that was realy hilarious!') )
-  end
-
-  def test_add_like_on
-    @user = Facebooker::User.new(548871286, @session)
-    expect_http_posts_with_responses(example_add_like_on_response)
-    assert_equal('1', @user.add_like_on('703826862_78463536862'))
-  end
-
   def test_can_send_email
     @user.expects(:send_email).with("subject", "body text")
     @user.send_email("subject", "body text")
@@ -239,23 +214,6 @@ class Facebooker::UserTest < Test::Unit::TestCase
   def test_can_set_status_with_string
     @session.expects(:post).with('facebook.users.setStatus', {:status=>"my status",:status_includes_verb=>1, :uid => @user.uid}, false)
     @user.set_status("my status")
-  end
-
-  def test_get_events
-    @user = Facebooker::User.new(9507801, @session)
-    expect_http_posts_with_responses(example_events_get_xml)
-    events = @user.events
-    assert_equal 29511517904, events.first.eid
-  end
-
-  def test_events_caching_honors_params
-    @user = Facebooker::User.new(9507801, @session)
-    @session.expects(:post).returns([{:eid=>1}])
-    assert_equal 1,@user.events.first.eid
-    @session.expects(:post).returns([{:eid=>2}])
-    assert_equal 2,@user.events(:start_time=>1.day.ago).first.eid
-    @session.expects(:post).never
-    assert_equal 1,@user.events.first.eid
   end
 
 
@@ -329,12 +287,6 @@ class Facebooker::UserTest < Test::Unit::TestCase
     @user = Facebooker::User.new(8055, @session)
     expect_http_posts_with_responses(example_users_get_info_xml)
     assert_equal "http://www.facebook.com/profile.php?id=8055", @user.profile_url
-  end
-
-  def test_can_rsvp_to_event
-    expect_http_posts_with_responses(example_events_rsvp_xml)
-    result = @user.rsvp_event(1000, 'attending')
-    assert result
   end
   
   # Dashboard count APIs

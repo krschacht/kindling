@@ -14,7 +14,7 @@ module Facebooker
           base_path += "/" unless base_path.ends_with?("/")
           image_path=base_path+"images/#{basename}"
           puts "refreshing: #{image_path}"
-          session.fbml.refresh_img_src(image_path)
+          session.server_cache.refresh_img_src(image_path)
         end
       end
     end

@@ -30,12 +30,7 @@ class Facebooker::AttachmentTest < Test::Unit::TestCase
     @attachment.description="my description"
     assert_equal({:description=>"my description"},@attachment.to_hash)
   end
-  
-  def test_can_set_comments_xid
-    @attachment.comments_xid="my xid"
-    assert_equal({:comments_xid=>"my xid"},@attachment.to_hash)    
-  end
-  
+    
   def test_can_add_media
     @attachment.add_media(:type=>"image",:src=>"http://www.google.com",:href=>"http://www.bing.com")
     assert_equal({:media=>[{:type=>"image",:src=>"http://www.google.com",:href=>"http://www.bing.com"}]},@attachment.to_hash)

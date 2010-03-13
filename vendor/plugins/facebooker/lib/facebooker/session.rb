@@ -221,20 +221,20 @@ module Facebooker
         user.session = self
         user.populate_from_hash!(hash)
         user
-      when 'photo'
-        Photo.from_hash(hash)
-      when 'album'
-        Album.from_hash(hash)
+      # when 'photo'
+      #   Photo.from_hash(hash)
+      # when 'album'
+      #   Album.from_hash(hash)
       when 'page'
         Page.from_hash(hash)
       when 'page_admin'
         Page.from_hash(hash)
-      when 'group'
-        Group.from_hash(hash)
-      when 'event'
-        Event.from_hash(hash)
-      when 'event_member'
-        Event::Attendance.from_hash(hash)
+      # when 'group'
+      #   Group.from_hash(hash)
+      # when 'event'
+      #   Event.from_hash(hash)
+      # when 'event_member'
+      #   Event::Attendance.from_hash(hash)
       else
         hash
       end
@@ -275,72 +275,7 @@ module Facebooker
     def user
       @user ||= User.new(uid, self)
     end
-
-    #
-    # This one has so many parameters, a Hash seemed cleaner than a long param list.  Options can be:
-    # :uid => Filter by events associated with a user with this uid
-    # :eids => Filter by this list of event ids. This is a comma-separated list of eids.
-    # :start_time => Filter with this UTC as lower bound. A missing or zero parameter indicates no lower bound. (Time or Integer)
-    # :end_time => Filter with this UTC as upper bound. A missing or zero parameter indicates no upper bound. (Time or Integer)
-    # :rsvp_status => Filter by this RSVP status.
-    def events(options = {})
-      @events ||= {}
-      @events[options.to_s] ||= post('facebook.events.get', options) do |response|
-        response.map do |hash|
-          Event.from_hash(hash)
-        end
-      end
-    end
-
-    # Creates an event with the event_info hash and an optional Net::HTTP::MultipartPostFile for the event picture.
-    # If ActiveSupport::TimeWithZone is installed (it's in Rails > 2.1), and start_time or end_time are given as
-    # ActiveSupport::TimeWithZone, then they will be assumed to represent local time for the event. They will automatically be
-    # converted to the expected timezone for Facebook, which is PST or PDT depending on when the event occurs.
-    # Returns the eid of the newly created event
-    # http://wiki.developers.facebook.com/index.php/Events.create
-    def create_event(event_info, multipart_post_file = nil)
-      if defined?(ActiveSupport::TimeWithZone) && defined?(ActiveSupport::TimeZone)
-        # Facebook expects all event local times to be in Pacific Time, so we need to take the actual local time and 
-        # send it to Facebook as if it were Pacific Time converted to Unix epoch timestamp. Very confusing...
-        facebook_time = ActiveSupport::TimeZone["Pacific Time (US & Canada)"]
-        
-        start_time = event_info.delete(:start_time) || event_info.delete('start_time')
-        if start_time && start_time.is_a?(ActiveSupport::TimeWithZone)
-          event_info['start_time'] = facebook_time.parse(start_time.strftime("%Y-%m-%d %H:%M:%S")).to_i
-        else
-          event_info['start_time'] = start_time
-        end
-        
-        end_time = event_info.delete(:end_time) || event_info.delete('end_time')
-        if end_time && end_time.is_a?(ActiveSupport::TimeWithZone)
-          event_info['end_time'] = facebook_time.parse(end_time.strftime("%Y-%m-%d %H:%M:%S")).to_i
-        else
-          event_info['end_time'] = end_time
-        end
-      end
-      
-      post_file('facebook.events.create', :event_info => event_info.to_json, nil => multipart_post_file)
-    end
     
-    # Cancel an event
-    # http://wiki.developers.facebook.com/index.php/Events.cancel
-    # E.g:
-    #  @session.cancel_event('100321123', :cancel_message => "It's raining...")
-    #  # => Returns true if all went well
-    def cancel_event(eid, options = {})
-      result = post('facebook.events.cancel', options.merge(:eid => eid))
-      result == '1' ? true : false
-    end
-
-    def event_members(eid)
-      @members ||= {}
-      @members[eid] ||= post('facebook.events.getMembers', :eid => eid) do |response|
-        response.map do |attendee_hash|
-          Event::Attendance.from_hash(attendee_hash)
-        end
-      end
-    end
-
     def users_standard(user_ids, fields=[])
       post("facebook.users.getStandardInfo",:uids=>user_ids.join(","),:fields=>User.standard_fields(fields)) do |users|
         users.map { |u| User.new(u)}
@@ -363,70 +298,40 @@ module Facebooker
       end
     end
 
-    # Takes page_id and uid, returns true if uid is a fan of the page_id
     def is_fan(page_id, uid)
       puts "Deprecated. Use Page#user_is_fan? instead"
       Page.new(page_id).user_is_fan?(uid)
     end    
 
 
+    #
+    # Returns a proxy object for handling calls to Facebook cached items
+    # such as images and FBML ref handles
+    def server_cache
+      Facebooker::ServerCache.new(self)
+    end
 
 
     def api
       Facebooker::Api.new(self)
     end
-    
-
 
     #
-    # Given an array like:
-    # [[userid, otheruserid], [yetanotherid, andanotherid]]
-    # returns a Hash indicating friendship of those pairs:
-    # {[userid, otheruserid] => true, [yetanotherid, andanotherid] => false}
-    # if one of the Hash values is nil, it means the facebook platform's answer is "I don't know"
-    def check_friendship(array_of_pairs_of_users)
-      uids1 = []
-      uids2 = []
-      array_of_pairs_of_users.each do |pair|
-        uids1 << pair.first
-        uids2 << pair.last
-      end
-      post('facebook.friends.areFriends', :uids1 => uids1.join(','), :uids2 => uids2.join(','))
+    # Returns a proxy object for handling calls to the Facebook Data API
+    def data
+      Facebooker::Data.new(self)
     end
 
-    def get_photos(pids = nil, subj_id = nil,  aid = nil)
-      if [subj_id, pids, aid].all? {|arg| arg.nil?}
-        raise ArgumentError, "Can't get a photo without a picture, album or subject ID" 
-      end
-      # We have to normalize params orherwise FB complain about signature
-      params = {:pids => pids, :subj_id => subj_id, :aid => aid}.delete_if { |k,v| v.nil? }
-      @photos = post('facebook.photos.get', params ) do |response|
-        response.map do |hash|
-          Photo.from_hash(hash)
-        end
-      end
+    def admin
+      Facebooker::Admin.new(self)
+    end
+    
+    def application
+      Facebooker::Application.new(self)
     end
 
-    #remove a comment from a given xid stream with comment_id
-    def remove_comment(xid,comment_id)
-      post('facebook.comments.remove', :xid=>xid, :comment_id =>comment_id)
-    end
-  
-    #pulls comment list for a given XID
-    def get_comments(xid)
-      @comments = post('facebook.comments.get', :xid => xid) do |response|
-        response.map do |hash|
-          Comment.from_hash(hash)
-        end
-      end
-    end
-
-    def get_albums(aids)
-      @albums = post('facebook.photos.getAlbums', :aids => aids) do |response|
-        response.map do |hash|        
-          Album.from_hash(hash)
-        end
-      end
+    def mobile
+      Facebooker::Mobile.new(self)
     end
 
     ###
@@ -440,24 +345,20 @@ module Facebooker
       end
     end
 
-    def get_tags(pids)
-      @tags = post('facebook.photos.getTags', :pids => pids)  do |response|
-        response.map do |hash|
-          Tag.from_hash(hash)
-        end
+    def send_notification(user_ids, fbml, email_fbml = nil)
+      params = {:notification => fbml, :to_ids => user_ids.map{ |id| User.cast_to_facebook_id(id)}.join(',')}
+      if email_fbml
+        params[:email] = email_fbml
       end
-    end
-
-    def add_tags(pid, x, y, tag_uid = nil, tag_text = nil )
-      if [tag_uid, tag_text].all? {|arg| arg.nil?}
-        raise ArgumentError, "Must enter a name or string for this tag"        
+      params[:type]="user_to_user"
+      # if there is no uid, this is an announcement
+      unless uid?
+        params[:type]="app_to_user"
       end
-      @tags = post('facebook.photos.addTag', :pid => pid, :tag_uid => tag_uid, :tag_text => tag_text, :x => x, :y => y )
-    end
 
-    ##
-    # Register a template bundle with Facebook.
-    # returns the template id to use to send using this template
+      post 'facebook.notifications.send', params,uid?
+    end 
+
     def register_template_bundle(one_line_story_templates,short_story_templates=nil,full_story_template=nil, action_links=nil)
       templates = ensure_array(one_line_story_templates)
       parameters = {:one_line_story_templates => templates.to_json}
@@ -478,10 +379,6 @@ module Facebooker
       post("facebook.feed.registerTemplateBundle", parameters, false)
     end
 
-    ##
-    # Deactivate a template bundle with Facebook.
-    # Returns true if a bundle with the specified id is active and owned by this app.
-    # Useful to avoid exceeding the 100 templates/app limit.
     def deactivate_template_bundle_by_id(template_bundle_id)
       post("facebook.feed.deactivateTemplateBundleByID", {:template_bundle_id => template_bundle_id.to_s}, false)
     end
@@ -490,10 +387,6 @@ module Facebooker
       post("facebook.feed.getRegisteredTemplateBundles",{},false)
     end
 
-    ##
-    # publish a previously rendered template bundle
-    # see http://wiki.developers.facebook.com/index.php/Feed.publishUserAction
-    #
     def publish_user_action(bundle_id,data={},target_ids=nil,body_general=nil,story_size=nil)
       parameters={:template_bundle_id=>bundle_id,:template_data=>data.to_json}
       parameters[:target_ids] = target_ids unless target_ids.blank?
@@ -503,8 +396,6 @@ module Facebooker
     end
 
 
-    ##
-    # Send email to as many as 100 users at a time
     def send_email(user_ids, subject, text, fbml = nil)       
       user_ids = Array(user_ids)
       params = {:fbml => fbml, :recipients => user_ids.map{ |id| User.cast_to_facebook_id(id)}.join(','), :text => text, :subject => subject} 

@@ -1,7 +1,6 @@
 require 'facebooker/model'
-#require 'facebooker/models/affiliation'
-#require 'facebooker/models/work_info'
-#require 'facebooker/models/family_relative_info'
+require 'facebooker/models/work_info'
+require 'facebooker/models/family_relative_info'
 module Facebooker
   #
   # Holds attributes and behavior for a Facebook User
@@ -14,7 +13,12 @@ module Facebooker
     FIELDS = [:status, :political, :pic_small, :name, :quotes, :is_app_user, :tv, :profile_update_time, :meeting_sex, :hs_info, :timezone, :relationship_status, :hometown_location, :about_me, :wall_count, :significant_other_id, :pic_big, :music, :work_history, :sex, :religion, :notes_count, :activities, :pic_square, :movies, :has_added_app, :education_history, :birthday, :birthday_date, :first_name, :meeting_for, :last_name, :interests, :current_location, :pic, :books, :affiliations, :locale, :profile_url, :proxied_email, :email_hashes, :allowed_restrictions, :pic_with_logo, :pic_big_with_logo, :pic_small_with_logo, :pic_square_with_logo, :online_presence, :verified, :profile_blurb, :username, :website, :is_blocked, :family, :email]
     STANDARD_FIELDS = [:uid, :first_name, :last_name, :name, :timezone, :birthday, :sex, :affiliations, :locale, :profile_url, :proxied_email, :email]
     populating_attr_accessor(*FIELDS)
-    attr_reader :affiliations
+    populating_hash_settable_accessor :current_location, Location
+    populating_hash_settable_accessor :hometown_location, Location
+    populating_hash_settable_accessor :hs_info, EducationInfo::HighschoolInfo
+    populating_hash_settable_list_accessor :education_history, EducationInfo
+    populating_hash_settable_list_accessor :work_history, WorkInfo
+    populating_hash_settable_list_accessor :family, FamilyRelativeInfo
 
     populating_attr_reader :status
 
@@ -46,34 +50,22 @@ module Facebooker
     id_is :uid
     alias :facebook_id :id
 
-    # Returns a user's events, params correspond to API call parameters (except UID):
-    # http://wiki.developers.facebook.com/index.php/Events.get
-    # E.g:
-    #  @user.events(:start_time => Time.now, :end_time => 1.month.from_now)
-    #  # => Returns events betwen now and a month from now
     def events(params={})
-      @events ||= {}
-      [:start_time,:end_time].compact.each do |key|
-        params[key] = params[key].to_i
-      end
-#      puts @events[params.to_s].nil?
-      @events[params.to_s] ||= @session.post('facebook.events.get', {:uid => self.id}.merge(params)).map do |event|
-        Event.from_hash(event)
-      end
+#       @events ||= {}
+#       [:start_time,:end_time].compact.each do |key|
+#         params[key] = params[key].to_i
+#       end
+# #      puts @events[params.to_s].nil?
+#       @events[params.to_s] ||= @session.post('facebook.events.get', {:uid => self.id}.merge(params)).map do |event|
+#         Event.from_hash(event)
+#       end
     end
 
-    # Rsvp to an event with the eid and rsvp_status which can be 'attending', 'unsure', or 'declined'.
-    # http://wiki.developers.facebook.com/index.php/Events.rsvp
-    # E.g:
-    #  @user.rsvp_event('100321123', 'attending')
-    #  # => Returns true if all went well
     def rsvp_event(eid, rsvp_status, options = {})
-      result = @session.post('facebook.events.rsvp', options.merge(:eid => eid, :rsvp_status => rsvp_status))
-      result == '1' ? true : false
+      # result = @session.post('facebook.events.rsvp', options.merge(:eid => eid, :rsvp_status => rsvp_status))
+      # result == '1' ? true : false
     end
 
-    #
-    # Set the list of friends, given an array of User objects.  If the list has been retrieved previously, will not set
     def friends=(list_of_friends,flid=nil)
       @friends_hash ||= {}
        flid=cast_to_friend_list_id(flid)
@@ -167,39 +159,6 @@ module Facebooker
       Facebooker.json_encode(a)
     end
 
-    ###
-    # Publish a comment on a post
-    #
-    # See: http://wiki.developers.facebook.com/index.php/Stream.addComment
-    #
-    # +post_id+ the post_id for the post that is being commented on
-    # +comment+ the text of the comment
-    def comment_on(post_id, comment)
-      @session.post('facebook.stream.addComment', {:post_id=>post_id, :comment=>comment})
-    end
-
-
-    ###
-    # Publish a comment to a specific comment set by xid
-    #
-    # See: http://wiki.developers.facebook.com/index.php/Comments.add
-    #
-    # +xid+ the xid for the set of comments
-    # +text+ the text of the comment
-    def add_comment(xid, text,title=nil,url=nil,publish_to_stream=false)
-      @session.post('facebook.comments.add',{:xid=>xid,:text=>text,:title=>title,:url=>url,:publish_to_stream=>publish_to_stream})
-    end
-
-    ###
-    # Add a like on a post
-    #
-    # See: http://wiki.developers.facebook.com/index.php/Stream.addLike
-    #
-    # +post_id+ the post_id for the post that is being commented on
-    def add_like_on(post_id)
-      @session.post('facebook.stream.addLike', {:post_id=>post_id})
-    end
-
      def friend_lists
        @friend_lists ||= @session.post('facebook.friends.getLists').map do |hash|
          friend_list = FriendList.from_hash(hash)
@@ -243,12 +202,12 @@ module Facebooker
     end
 
     def groups(gids = [])
-      args = gids.empty? ? {} : {:gids => gids}
-      @groups ||= session.post('facebook.groups.get', args).map do |hash|
-        group = Group.from_hash(hash)
-        group.session = session
-        group
-      end
+      # args = gids.empty? ? {} : {:gids => gids}
+      # @groups ||= session.post('facebook.groups.get', args).map do |hash|
+      #   group = Group.from_hash(hash)
+      #   group.session = session
+      #   group
+      # end
     end
 
     ###
@@ -270,83 +229,16 @@ module Facebooker
       @notifications ||= Notifications.from_hash(session.post('facebook.notifications.get'))
     end
 
-    def albums
-      @albums ||= session.post('facebook.photos.getAlbums', :uid => self.id) do |response|
-        response.map do |hash|
-          Album.from_hash(hash)
-        end
-      end
+    def publish_story(story)
+      publish(story)
     end
 
-    def create_album(params)
-      @album = session.post('facebook.photos.createAlbum', params) {|response| Album.from_hash(response)}
+    def publish_action(action)
+      publish(action)
     end
 
-    def profile_photos
-      session.get_photos(nil, nil, profile_pic_album_id)
-    end
-
-    # Upload a photo to the user's profile.
-    #
-    # In your view, create a multipart form that posts directly to your application (not through canvas):
-    #
-    #   <% form_tag photos_url(:canvas => false), :html => {:multipart => true, :promptpermission => 'photo_upload'} do %>
-    #     Photo: <%= file_field_tag 'photo' %>
-    #     Caption: <%= text_area_tag 'caption' %>
-    #     <%= submit_tag 'Upload Photo', :class => 'inputsubmit' %>
-    #   <% end %>
-    #
-    # And in your controller:
-    #
-    #   class PhotosController < ApplicationController
-    #     def create
-    #       file = Net::HTTP::MultipartPostFile.new(
-    #         params[:photo].original_filename,
-    #         params[:photo].content_type,
-    #         params[:photo].read
-    #       )
-    #
-    #       @photo = facebook_session.user.upload_photo(file, :caption => params[:caption])
-    #       redirect_to photos_url(:canvas => true)
-    #     end
-    #   end
-    #
-    # Options correspond to http://wiki.developers.facebook.com/index.php/Photos.upload
-    def upload_photo(multipart_post_file, options = {})
-      Photo.from_hash(session.post_file('facebook.photos.upload',
-        options.merge(nil => multipart_post_file)))
-    end
-
-    # Upload a video to the user's profile.
-    #
-    # In your view, create a multipart form that posts directly to your application (not through canvas):
-    #
-    #   <% form_tag videos_url(:canvas => false), :html => {:multipart => true, :promptpermission => 'video_upload'} do %>
-    #     Video: <%= file_field_tag 'video' %>
-    #     Title: <%= text_area_tag 'title' %>
-    #     Description: <%= text_area_tag 'description' %>
-    #     <%= submit_tag 'Upload Video', :class => 'inputsubmit' %>
-    #   <% end %>
-    #
-    # And in your controller:
-    #
-    #   class VideosController < ApplicationController
-    #     def create
-    #       file = Net::HTTP::MultipartPostFile.new(
-    #         params[:photo].original_filename,
-    #         params[:photo].content_type,
-    #         params[:photo].read
-    #       )
-    #
-    #       @video = facebook_session.user.upload_video(file, :description => params[:description])
-    #       redirect_to videos_url(:canvas => true)
-    #     end
-    #   end
-    #
-    # Options correspond to http://wiki.developers.facebook.com/index.php/Video.upload
-    def upload_video(multipart_post_file, options = {})
-      Video.from_hash(session.post_file('facebook.video.upload',
-        options.merge(nil => multipart_post_file, :base => Facebooker.video_server_base)))
+    def publish_templatized_action(action)
+      publish(action)
     end
 
     def profile_fbml
@@ -476,6 +368,27 @@ module Facebooker
     end
     
     
+    ### NEW DASHBOARD API STUFF
+    
+    # facebook_session.user.dashboard_count
+    def dashboard_count
+      session.post('facebook.dashboard.getCount', :uid => uid)
+    end
+    
+    # facebook_session.user.dashboard_count = 5
+    def dashboard_count=(new_count)
+      session.post('facebook.dashboard.setCount', :uid => uid, :count => new_count)
+    end
+    
+    # facebook_session.user.dashboard_increment_count
+    def dashboard_increment_count
+      session.post('facebook.dashboard.incrementCount', :uid => uid)
+    end
+    
+    # facebook_session.user.dashboard_decrement_count
+    def dashboard_decrement_count
+      session.post('facebook.dashboard.decrementCount', :uid => uid)
+    end
     
     # The following methods are not bound to a specific user but do relate to Users in general,
     #   so I've made them into class methods.
@@ -499,7 +412,34 @@ module Facebooker
     def self.dashboard_multi_decrement_count(*uids)
       Facebooker::Session.create.post("facebook.dashboard.multiDecrementCount", :uids => uids.flatten.collect{ |uid| uid.to_s }.to_json)
     end
+    
+    
+    
+    
+    def get_news(*news_ids)
+      params = { :uid => uid }
+      params[:news_ids] = news_ids.flatten if news_ids
       
+      session.post('facebook.dashboard.getNews', params)
+    end
+    
+    # facebook_session.user.add_news [{ :message => 'Hey, who are you?', :action_link => { :text => "I-I'm a test user", :href => 'http://facebook.er/' }}], 'http://facebook.er/icon.png'
+    def add_news(news, image=nil)
+      params = { :uid => uid }
+      params[:news] = news
+      params[:image] = image if image
+      
+      session.post('facebook.dashboard.addNews', params)
+    end
+    
+    # facebook_session.user.clear_news ['111111']
+    def clear_news(*news_ids)
+      params = { :uid => uid }
+      params[:news_ids] = news_ids.flatten if news_ids
+      
+      session.post('facebook.dashboard.clearNews', params)
+    end
+    
     # Facebooker::User.multi_add_news(['1234', '4321'], [{ :message => 'Hi users', :action_link => { :text => "Uh hey there app", :href => 'http://facebook.er/' }}], 'http://facebook.er/icon.png')
     def self.multi_add_news(uids, news, image=nil)
       params = { :uids => uids, :news => news }

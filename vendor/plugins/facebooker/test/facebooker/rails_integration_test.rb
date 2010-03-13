@@ -244,11 +244,6 @@ class RailsIntegrationTestForExtendedPermissions < Test::Unit::TestCase
     assert_response :success
     assert_equal("<fb:redirect url=\"http://www.facebook.com/authorize.php?api_key=1234567&v=1.0&ext_perm=create_listing\" />", @response.body)
   end
-  def test_redirects_without_create_event
-    post :index, facebook_params(:fb_sig_ext_perms=>"status_update,photo_upload,create_listing,video_upload")
-    assert_response :success
-    assert_equal("<fb:redirect url=\"http://www.facebook.com/authorize.php?api_key=1234567&v=1.0&ext_perm=create_event\" />", @response.body)
-  end
   
   def test_renders_with_permission
     post :index, facebook_params(:fb_sig_ext_perms=>"status_update,photo_upload,create_listing,video_upload,create_event")
@@ -988,17 +983,6 @@ class RailsHelperTest < Test::Unit::TestCase
     assert_equal "<fb:create-button href=\"/growingpets/invite\">Invite Friends</fb:create-button>", @h.fb_create_button('Invite Friends', '/growingpets/invite')
   end
 
-  def test_fb_comments_a_1
-    assert_equal "<fb:comments candelete=\"false\" canpost=\"true\" numposts=\"7\" showform=\"true\" xid=\"a:1\"></fb:comments>", @h.fb_comments("a:1",true,false,7,:showform=>true)
-  end
-
-  def test_fb_comments_xxx
-    assert_equal "<fb:comments candelete=\"false\" canpost=\"true\" numposts=\"4\" optional=\"false\" xid=\"xxx\"></fb:comments>", @h.fb_comments("xxx",true,false,4,:optional=>false)
-  end
-
-  def test_fb_comments_with_title
-    assert_equal "<fb:comments candelete=\"false\" canpost=\"true\" numposts=\"4\" optional=\"false\" xid=\"xxx\"><fb:title>TITLE</fb:title></fb:comments>", @h.fb_comments("xxx",true,false,4,:optional=>false, :title => "TITLE") 
-  end
   def test_fb_board
     assert_equal "<fb:board optional=\"false\" xid=\"xxx\"></fb:board>", @h.fb_board("xxx",:optional => false) 
   end

@@ -68,13 +68,6 @@ class TestFacebooker < Test::Unit::TestCase
     assert_equal(8055, @session.user.id)
   end
 
-  def test_can_get_notifications_for_logged_in_user
-    expect_http_posts_with_responses(example_notifications_get_xml)
-    assert_equal("1", @session.user.notifications.messages.unread)
-    assert_equal("0", @session.user.notifications.pokes.unread)
-    assert_equal("1", @session.user.notifications.shares.unread)
-  end
-
   def test_can_get_current_users_friends
     expect_http_posts_with_responses(example_friends_xml)
     assert_equal([222333, 1240079], @session.user.friends.map{|friend| friend.id})
@@ -88,22 +81,6 @@ class TestFacebooker < Test::Unit::TestCase
   def test_can_get_info_for_instance_of_user
     populate_user_info
     @session.user.first_name = "Dave"
-  end
-
-  def test_can_get_info_for_one_or_more_users
-    friends = populate_session_friends
-    friend = friends.detect{|f| f.id == 222333}
-    assert_equal('This field perpetuates the glorification of the ego.  Also, it has a character limit.',
-                 friend.about_me)
-    assert_equal('Facebook Developers', friend.affiliations.first.name)
-    assert_equal('Friendship', friend.meeting_for.first)
-    assert_equal('94303', friend.current_location.zip)
-    assert_equal('York', friend.hometown_location.city)
-    assert_equal('Harvard', friend.education_history.first.name)
-    assert(friend.education_history.first.concentrations.include?("Computer Science"))
-    assert_equal('Central York High School', friend.hs_info.hs1_name)
-    assert_equal('female', friend.meeting_sex.first)
-    assert_equal('I rule', friend.status.message)
   end
 
   def test_can_get_specific_info_for_one_or_more_users
@@ -127,9 +104,69 @@ class TestFacebooker < Test::Unit::TestCase
     }
   end
 
+
+  def test_can_publish_story_to_users_feed
+    expect_http_posts_with_responses(example_publish_story_xml)
+    assert_nothing_raised {
+      assert(@session.user.publish_story((s = Facebooker::Feed::Story.new; s.title = 'o hai'; s.body = '4srsly'; s)))
+    }
+  end
+
+
+  def test_can_publish_action_to_users_feed
+    expect_http_posts_with_responses(example_publish_action_xml)
+    assert_nothing_raised {
+      assert(@session.user.publish_action((s = Facebooker::Feed::Action.new; s.title = 'o hai'; s.body = '4srsly'; s)))
+    }
+  end
+
+  def test_can_publish_templatized_action_to_users_feed
+    expect_http_posts_with_responses(example_publish_templatized_action_xml)
+    assert_nothing_raised {
+      action = Facebooker::Feed::TemplatizedAction.new
+      action.title_template = "{actor} did something"
+      assert(@session.user.publish_templatized_action(action))
+    }
+  end
+
+  def test_can_publish_templatized_action_to_users_feed_with_params_as_string
+    json_data="{\"move\": \"punch\"}"
+    action = Facebooker::Feed::TemplatizedAction.new
+    action.title_template = "{actor} did something "
+    action.title_data=json_data
+    assert_equal action.to_params[:title_data],json_data
+  end
+
+  def test_can_publish_templatized_action_to_users_feed_with_params_as_hash
+    json_data="{\"move\": \"punch\"}"
+    hash={:move=>"punch"}
+    hash.expects(:to_json).returns(json_data)
+    action = Facebooker::Feed::TemplatizedAction.new
+    action.title_template = "{actor} did something "
+    action.title_data=hash
+    assert_equal action.to_params[:title_data],json_data
+  end
+
   def test_can_deactivate_template_bundle_by_id
     expect_http_posts_with_responses(example_deactivate_template_bundle_by_id_xml)
     assert_equal true, @session.post('facebook.feed.deactivateTemplateBundleByID', :template_bundle_id => 123)
+  end
+
+  def test_can_get_notifications_for_logged_in_user
+    expect_http_posts_with_responses(example_notifications_get_xml)
+    assert_equal("1", @session.user.notifications.messages.unread)
+    assert_equal("0", @session.user.notifications.pokes.unread)
+    assert_equal("1", @session.user.notifications.shares.unread)
+  end
+
+  def test_can_send_notifications
+    expect_http_posts_with_responses(example_notifications_send_xml)
+    assert_nothing_raised {
+      user_ids = [123, 321]
+      notification_fbml = "O HAI!!!"
+      optional_email_fbml = "This would be in the email.  If this is not passed, facebook sends no mailz!"
+      assert_equal('http://www.facebook.com/send_email.php?from=211031&id=52', @session.send_notification(user_ids, notification_fbml, optional_email_fbml))
+    }
   end
 
   def test_can_send_emails
@@ -174,89 +211,11 @@ class TestFacebooker < Test::Unit::TestCase
     assert(@session.secured?)
   end
 
-  def test_can_get_photos_by_pids
-    expect_http_posts_with_responses(example_get_photo_xml)
-    photos = @session.get_photos([97503428461115590, 97503428461115573])
-    assert_equal 2, photos.size
-    assert_equal "Rooftop barbecues make me act funny", photos.first.caption
-    assert_equal "97503428461115590", photos[0].id
-  end
-
-  def test_can_get_photos_by_subject_and_album
-    expect_http_posts_with_responses(example_get_photo_xml)
-    photos = @session.get_photos(nil, 22701786, 97503428432802022 )
-    assert_equal '97503428432802022', photos.first.aid
-  end
-
-  def test_getting_photos_requires_arguments
-    mock_http = establish_session
-    assert_raise(ArgumentError) { @session.get_photos() }
-  end
-
-  def test_can_get_comments_by_xid
-    expect_http_posts_with_responses(example_comments_xml)
-    comments = @session.get_comments('pete_comments')
-    assert_equal('Hola', comments[0].text)
-    assert_equal(2, comments.size)
-  end
-
-  def test_can_get_albums_for_user
-    expect_http_posts_with_responses(example_user_albums_xml)
-    assert_equal('Summertime is Best', @session.user.albums.first.name)
-    assert_equal(2, @session.user.albums.size)
-  end
-
-  def test_can_get_albums_by_album_ids
-    expect_http_posts_with_responses(example_user_albums_xml)
-    albums = @session.get_albums([97503428432802022, 97503428432797817] )
-    assert_equal('Summertime is Best', albums[0].name)
-    assert_equal('Bonofon\'s Recital', albums[1].name)
-  end
-
   def test_can_get_stream
     expect_http_posts_with_responses(example_user_stream_xml)
     stream = @session.get_stream(100000637452380)
     assert stream[:albums].empty?
     assert_equal('The bbc home page', stream[:posts].first['message'])
-  end
-
-  def test_can_create_album
-    expect_http_posts_with_responses(example_new_album_xml)
-    assert_equal "My Empty Album", @session.user.create_album(:name => "My Empty Album", :location => "Limboland").name
-  end
-
-  def test_can_upload_photo
-    mock_http = establish_session
-    mock_http.should_receive(:post_multipart_form).and_return(example_upload_photo_xml).once.ordered(:posts)
-    f = Net::HTTP::MultipartPostFile.new("image.jpg", "image/jpeg", "RAW DATA")
-    assert_equal "Under the sunset", @session.user.upload_photo(f).caption
-  end
-
-  def test_can_get_photo_tags
-    expect_http_posts_with_responses(example_photo_tags_xml)
-    assert_instance_of Facebooker::Tag, @session.get_tags(:pids => 97503428461115571 ).first
-  end
-
-  # TODO: how to test that tags were created properly? Response doesn't contain much
-  def test_can_tag_a_user_in_a_photo
-    expect_http_posts_with_responses(example_add_tag_xml)
-    assert !@session.add_tags(pid = 97503428461115571, x= 30.0, y = 62.5, tag_uid = 1234567890).nil?
-  end
-
-  def test_can_add_multiple_tags_to_photos
-  end
-
-  def test_can_get_coordinates_for_photo_tags
-    expect_http_posts_with_responses(example_photo_tags_xml)
-    tag = @session.get_tags([97503428461115571]).first
-    assert_equal ['65.4248', '16.8627'], tag.coordinates
-  end
-
-  def test_can_upload_video
-    mock_http = establish_session
-    mock_http.should_receive(:post_multipart_form).and_return(example_upload_video_xml).once
-    f = Net::HTTP::MultipartPostFile.new("party.mp4", "video/mpeg", "RAW DATA")
-    assert_equal "Some Epic", @session.user.upload_video(f).title
   end
 
   def test_can_get_app_profile_fbml_for_user
@@ -337,20 +296,7 @@ class TestFacebooker < Test::Unit::TestCase
     expect_http_posts_with_responses(example_revoke_authorization_false)
     assert_equal false, @session.post('facebook.auth.revokeAuthorization', :uid => 123)
   end
-  
-  
-  
-  def test_remove_comment_true
-    expect_http_posts_with_responses(example_remove_comment_true)
-    assert_equal true,  @session.remove_comment('pete_comments',123)
-  end
-  
-  def test_remove_comment_false
-    expect_http_posts_with_responses(example_remove_comment_false)
-    assert_equal false, @session.remove_comment('pete_comments',123)
-  end
-  
-  
+    
   
   private
   def populate_user_info
@@ -509,6 +455,13 @@ class TestFacebooker < Test::Unit::TestCase
     <<-XML
     <?xml version="1.0" encoding="UTF-8"?>
     <feed_publishStoryToUser_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd">1</feed_publishStoryToUser_response>
+    XML
+  end
+
+  def example_publish_action_xml
+    <<-XML
+    <?xml version="1.0" encoding="UTF-8"?>
+    <feed_publishActionOfUser_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd">1</feed_publishActionOfUser_response>
     XML
   end
 

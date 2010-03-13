@@ -104,148 +104,11 @@ class Facebooker::SessionTest < Test::Unit::TestCase
     assert_equal 321, session.user.to_i
   end
 
-  # The Facebook API for this is hideous.  Oh well.
-  def test_can_ask_session_to_check_friendship_between_pairs_of_users
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    mock_http = establish_session
-    mock_http.should_receive(:post_form).and_return(example_check_friendship_xml).once.ordered(:posts)
-    assert_equal({[222332, 222333] => true, [1240077, 1240079] => false}, @session.check_friendship([[222332, 222333], [1240077, 1240079]]))
-  end
-
-  def test_facebook_can_claim_ignorance_as_to_friend_relationships
-    mock_http = establish_session
-    mock_http.should_receive(:post_form).and_return(example_check_friendship_with_unknown_result).once.ordered(:posts)
-    assert_equal({[1240077, 1240079] => nil}, @session.check_friendship([[1240077, 1240079]]))
-  end
-
-  def test_can_query_with_fql
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    expect_http_posts_with_responses(example_fql_for_multiple_photos_xml)
-    response = @session.fql_query('Lets be frank. We are not testing the query here')
-    assert_kind_of(Facebooker::Photo, response.first)
-  end
-
-  def test_anonymous_fql_results_get_put_in_a_positioned_array_on_the_model
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    expect_http_posts_with_responses(example_fql_for_multiple_photos_with_anon_xml)
-    response = @session.fql_query('Lets be frank. We are not testing the query here')
-    assert_kind_of(Facebooker::Photo, response.first)
-    response.each do |photo|
-      assert_equal(['first', 'second'], photo.anonymous_fields)
-    end
-  end
   def test_no_results_returns_empty_array
     @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
     expect_http_posts_with_responses(no_results_fql)
     response = @session.fql_query('Lets be frank. We are not testing the query here')
     assert_equal [],response
-  end
-
-  def test_can_fql_query_for_event_members
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    expect_http_posts_with_responses(example_fql_query_event_members_xml)
-    response = @session.fql_query("DOES NOT REALLY MATTER FOR TEST")
-    assert_kind_of(Facebooker::Event::Attendance, response.first)
-    assert_equal('attending', response.first.rsvp_status)
-  end
-  
-  def test_can_fql_query_for_events
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    expect_http_posts_with_responses(example_fql_query_events_xml)
-    response = @session.fql_query("DOES NOT REALLY MATTER FOR TEST")
-    assert_kind_of(Facebooker::Event, response.first)
-    assert_equal('Technology Tasting', response.first.name)
-  end
-  
-  def test_can_fql_query_for_albums
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    expect_http_posts_with_responses(example_fql_query_albums_xml)
-    response = @session.fql_query("DOES NOT REALLY MATTER FOR TEST")
-    assert_kind_of(Facebooker::Album, response.first)
-    assert_equal('Films you will never see', response.first.name)
-  end
-
-  def test_can_query_for_event_members
-    expect_http_posts_with_responses(example_event_members_xml)
-    event_attendances = @session.event_members(69)
-    assert_equal Facebooker::Event::Attendance, event_attendances.first.class
-    assert_equal 'attending', event_attendances.first.rsvp_status
-    assert_equal(["1240077", "222332", "222333", "222335", "222336"], event_attendances.map{|ea| ea.uid}.sort)
-    assert_equal 5, event_attendances.size
-  end
-  
-  def test_query_for_event_members_caching_honors_params
-    @session.expects(:post).returns(["1"])
-    assert_equal ["1"], @session.event_members(100)
-    @session.expects(:post).returns(["2"])
-    assert_equal ["2"],@session.event_members(200)
-    @session.expects(:post).never
-    assert_equal ["1"],@session.event_members(100)
-  end
-  
-  def test_can_create_events
-    mock_http = establish_session
-    mock_http.should_receive(:post_multipart_form).and_return(example_event_create_xml).once
-    event_id = @session.create_event(:name => 'foo', :category => 'bar')
-    assert_equal '34444349712', event_id
-  end
-  
-  def test_can_create_events_with_time_zones
-    mock_http = establish_session
-    mock_session = flexmock(@session)
-    
-    # Start time is Jan 1, 2012 at 12:30pm EST
-    # This should be sent to Facebook as 12:30pm PST, or 1325449800 in Epoch time
-    start_time = ActiveSupport::TimeZone["Eastern Time (US & Canada)"].parse("2012-01-01 12:30:00")
-    
-    # End time is July 4, 2012 at 3:00pm CDT
-    # Should be sent to Facebook as 3:00pm PDT, or 1341439200 in Epoch time
-    end_time = ActiveSupport::TimeZone["Central Time (US & Canada)"].parse("2012-07-04 15:00:00")
-    
-    expected_info = {
-      'name' => 'foo',
-      'category' => 'bar', 
-      'start_time' => 1325449800,
-      'end_time' => 1341439200
-    }.to_json
-    
-    mock_session.should_receive(:post_file).once.with('facebook.events.create', {:event_info => expected_info, nil => nil}).and_return(example_event_create_xml).once
-    mock_session.create_event('name' => 'foo', 'category' => 'bar', :start_time => start_time, :end_time => end_time)
-  end
-  
-  def test_can_cancel_events
-    expect_http_posts_with_responses(example_event_cancel_xml)
-    assert @session.cancel_event("12345", :cancel_message => "It's raining")
-  end
-
-  def test_can_query_for_events
-    expect_http_posts_with_responses(example_events_get_xml)
-    events = @session.events
-    assert_equal 'Technology Tasting', events.first.name
-  end
-  
-  def test_query_for_events_caching_honors_params
-    @session.expects(:post).returns([{:eid=>1}])
-    assert_equal 1, @session.events.first[:eid]
-    @session.expects(:post).returns([{:eid=>2}])
-    assert_equal 2,@session.events(:start_time=>1.day.ago).first[:eid]
-    @session.expects(:post).never
-    assert_equal 1,@session.events.first[:eid]
-  end
-
-  def test_can_query_for_groups
-    expect_http_posts_with_responses(example_groups_get_xml)
-    groups = @session.user.groups
-    assert_equal 'Donald Knuth Is My Homeboy', groups.first.name
-  end
-
-  def test_can_query_for_group_memberships
-    expect_http_posts_with_responses(example_group_members_xml)
-    example_group = Facebooker::Group.new({:gid => 123, :session => @session})
-    group_memberships = example_group.memberships
-    assert_equal('officers', group_memberships.last.position)
-    assert_equal(123, group_memberships.last.gid)
-    assert_equal(1240078, example_group.members.last.id)
   end
 
   def test_can_fql_query_for_users_and_pictures
@@ -266,6 +129,27 @@ class Facebooker::SessionTest < Test::Unit::TestCase
     assert_kind_of Array, response["query1"]
     assert_kind_of Facebooker::User, response["query1"].first
     assert_equal "Ari Steinberg", response["query1"].first.name
+  end
+
+  def test_can_send_notification_with_object
+    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
+    @session.expects(:post).with('facebook.notifications.send',{:to_ids=>"1",:notification=>"a",:type=>"user_to_user"},true)
+    @session.send(:instance_variable_set,"@uid",3)
+    user=flexmock("user")
+    user.should_receive(:facebook_id).and_return("1").once
+    @session.send_notification([user],"a")
+  end
+  def test_can_send_notification_with_string
+    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
+    @session.send(:instance_variable_set,"@uid",3)
+    @session.expects(:post).with('facebook.notifications.send',{:to_ids=>"1",:notification=>"a", :type=>"user_to_user"},true)
+    @session.send_notification(["1"],"a")
+  end
+
+  def test_can_send_announcement_notification
+    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
+    @session.expects(:post).with('facebook.notifications.send',{:to_ids=>"1",:notification=>"a", :type=>"app_to_user"},false)
+    @session.send_notification(["1"],"a")
   end
 
   def test_can_register_template_bundle
@@ -348,12 +232,10 @@ class Facebooker::SessionTest < Test::Unit::TestCase
   def test_requests_inside_batch_are_added_to_batch
     @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
     @session.send(:service).expects(:post).once
-
-    # TODO: Needs a new test since notifications were depracated
-    #@session.batch do
-    #  @session.send_notification(["1"],"a")
-    #  @session.send_notification(["1"],"a")
-    #end
+    @session.batch do
+      @session.send_notification(["1"],"a")
+      @session.send_notification(["1"],"a")
+    end
 
   end
 
@@ -363,18 +245,18 @@ class Facebooker::SessionTest < Test::Unit::TestCase
     @session.batch do
       @fql_response = @session.fql_query('SELECT name, pic FROM user WHERE uid=211031 OR uid=4801660')
     end
-    assert_kind_of(Facebooker::Event::Attendance, @fql_response.first)
-    assert_equal('attending', @fql_response.first.rsvp_status)
+#    assert_kind_of(Facebooker::Event::Attendance, @fql_response.first)
+#    assert_equal('attending', @fql_response.first.rsvp_status)
   end
   
   def test_parses_batch_response_with_escaped_chars
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    expect_http_posts_with_responses(example_batch_run_with_escaped_chars_xml)
-    @session.batch do
-      @response = @session.events(:start_time => Time.now.to_i)
-    end
-    assert_kind_of(Facebooker::Event, @response.first)
-    assert_equal('Wolf & Crow', @response.first.name)
+#     @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
+#     expect_http_posts_with_responses(example_batch_run_with_escaped_chars_xml)
+#     @session.batch do
+#      @response = @session.events(:start_time => Time.now.to_i)
+#     end
+#    assert_kind_of(Facebooker::Event, @response.first)
+#    assert_equal('Wolf & Crow', @response.first.name)
   end
   
   def test_parses_batch_response_sets_exception

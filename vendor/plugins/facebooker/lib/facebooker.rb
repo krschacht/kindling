@@ -207,8 +207,10 @@ end
 
 require 'facebooker/attachment'
 require 'facebooker/batch_request'
+require 'facebooker/feed'
 require 'facebooker/logging'
 require 'facebooker/model'
+require 'facebooker/parser'
 require 'facebooker/service'
 require 'facebooker/service/base_service'
 #optional HTTP service adapters
@@ -225,10 +227,25 @@ rescue LoadError
 end
 
 require 'facebooker/service/net_http_service'
+require 'facebooker/server_cache'
+require 'facebooker/data'
+require 'facebooker/admin'
+require 'facebooker/application'
+require 'facebooker/mobile'
 require 'facebooker/session'
 require 'facebooker/stream_post'
 require 'facebooker/version'
+require 'facebooker/models/location'
+require 'facebooker/models/education_info'
+require 'facebooker/models/work_info' ###
+require 'facebooker/models/notifications'
+require 'facebooker/models/page'
+require 'facebooker/models/cookie'
 require 'facebooker/models/user'
+require 'facebooker/models/info_item'
+require 'facebooker/models/info_section'
+require 'facebooker/models/friend_list'
+require 'facebooker/models/message_thread'
 require 'facebooker/adapters/adapter_base'
 require 'facebooker/adapters/facebook_adapter'
 require 'facebooker/adapters/bebo_adapter'

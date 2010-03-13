@@ -14,7 +14,7 @@ class SparechangeController < ApplicationController
                :set_ie7_header,
                :update_install,
                :update_install_source,
-               :select_tab
+               :select_tab,
           :except => :index
 
   def postback

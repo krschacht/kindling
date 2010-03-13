@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
   has_many :premium_transactions, :order => "created_at"
   has_many :gambit_postbacks, :foreign_key => 'uid'
   has_many :sparechange_postbacks, :foreign_key => 'senderid'
+  has_many :visits
   
   after_create :award_new_player_premium_currency
 
