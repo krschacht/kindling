@@ -1,7 +1,7 @@
 require 'facebooker/model'
-require 'facebooker/models/affiliation'
-require 'facebooker/models/work_info'
-require 'facebooker/models/family_relative_info'
+#require 'facebooker/models/affiliation'
+#require 'facebooker/models/work_info'
+#require 'facebooker/models/family_relative_info'
 module Facebooker
   #
   # Holds attributes and behavior for a Facebook User
@@ -15,13 +15,6 @@ module Facebooker
     STANDARD_FIELDS = [:uid, :first_name, :last_name, :name, :timezone, :birthday, :sex, :affiliations, :locale, :profile_url, :proxied_email, :email]
     populating_attr_accessor(*FIELDS)
     attr_reader :affiliations
-    populating_hash_settable_accessor :current_location, Location
-    populating_hash_settable_accessor :hometown_location, Location
-    populating_hash_settable_accessor :hs_info, EducationInfo::HighschoolInfo
-    populating_hash_settable_list_accessor :affiliations, Affiliation
-    populating_hash_settable_list_accessor :education_history, EducationInfo
-    populating_hash_settable_list_accessor :work_history, WorkInfo
-    populating_hash_settable_list_accessor :family, FamilyRelativeInfo
 
     populating_attr_reader :status
 
@@ -277,18 +270,6 @@ module Facebooker
       @notifications ||= Notifications.from_hash(session.post('facebook.notifications.get'))
     end
 
-    def publish_story(story)
-      publish(story)
-    end
-
-    def publish_action(action)
-      publish(action)
-    end
-
-    def publish_templatized_action(action)
-      publish(action)
-    end
-
     def albums
       @albums ||= session.post('facebook.photos.getAlbums', :uid => self.id) do |response|
         response.map do |hash|
@@ -495,27 +476,6 @@ module Facebooker
     end
     
     
-    ### NEW DASHBOARD API STUFF
-    
-    # facebook_session.user.dashboard_count
-    def dashboard_count
-      session.post('facebook.dashboard.getCount', :uid => uid)
-    end
-    
-    # facebook_session.user.dashboard_count = 5
-    def dashboard_count=(new_count)
-      session.post('facebook.dashboard.setCount', :uid => uid, :count => new_count)
-    end
-    
-    # facebook_session.user.dashboard_increment_count
-    def dashboard_increment_count
-      session.post('facebook.dashboard.incrementCount', :uid => uid)
-    end
-    
-    # facebook_session.user.dashboard_decrement_count
-    def dashboard_decrement_count
-      session.post('facebook.dashboard.decrementCount', :uid => uid)
-    end
     
     # The following methods are not bound to a specific user but do relate to Users in general,
     #   so I've made them into class methods.
@@ -539,34 +499,7 @@ module Facebooker
     def self.dashboard_multi_decrement_count(*uids)
       Facebooker::Session.create.post("facebook.dashboard.multiDecrementCount", :uids => uids.flatten.collect{ |uid| uid.to_s }.to_json)
     end
-    
-    
-    
-    
-    def get_news(*news_ids)
-      params = { :uid => uid }
-      params[:news_ids] = news_ids.flatten if news_ids
       
-      session.post('facebook.dashboard.getNews', params)
-    end
-    
-    # facebook_session.user.add_news [{ :message => 'Hey, who are you?', :action_link => { :text => "I-I'm a test user", :href => 'http://facebook.er/' }}], 'http://facebook.er/icon.png'
-    def add_news(news, image=nil)
-      params = { :uid => uid }
-      params[:news] = news
-      params[:image] = image if image
-      
-      session.post('facebook.dashboard.addNews', params)
-    end
-    
-    # facebook_session.user.clear_news ['111111']
-    def clear_news(*news_ids)
-      params = { :uid => uid }
-      params[:news_ids] = news_ids.flatten if news_ids
-      
-      session.post('facebook.dashboard.clearNews', params)
-    end
-    
     # Facebooker::User.multi_add_news(['1234', '4321'], [{ :message => 'Hi users', :action_link => { :text => "Uh hey there app", :href => 'http://facebook.er/' }}], 'http://facebook.er/icon.png')
     def self.multi_add_news(uids, news, image=nil)
       params = { :uids => uids, :news => news }

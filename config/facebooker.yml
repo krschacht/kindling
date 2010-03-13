@@ -3,8 +3,8 @@
 # Your callback url in Facebook should be set to http://public_host:public_port
 
 keith_development:
-  api_key: 7c5d9d041a99c03159bbaf537ac42791
-  secret_key: ac968876a0fa4eb1013fe120a30f218e
+  api_key: eca4223c4c8056c566654d570fe2877a
+  secret_key: 8ba881f079c6e6d9edc30dddb3fc6fae
   canvas_page_name:  schacht
   callback_url: http://web1.tunnlr.com:10107
   pretty_errors: false
