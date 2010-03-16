@@ -255,30 +255,6 @@ class Facebooker::Rails::Publisher::PublisherTest < Test::Unit::TestCase
     TestPublisher.deliver_story(@user)
   end
 
-  def test_create_notification
-    notification=TestPublisher.create_notification(12451752,@user)
-    assert_equal Facebooker::Rails::Publisher::Notification,notification.class
-    assert_equal "Not",notification.fbml
-  end
-
-  def test_deliver_notification
-    @session.expects(:send_notification)
-    TestPublisher.deliver_notification("12451752",@user)
-  end
-
-  def test_create_email
-    email=TestPublisher.create_email("12451752",@user)
-    assert_equal Facebooker::Rails::Publisher::Email,email.class
-    assert_equal "Email",email.title
-    assert_equal "text",email.text
-    assert_equal "text",email.fbml
-  end
-
-  def test_deliver_email
-    @session.expects(:send_email)
-    TestPublisher.deliver_email("12451752",@user)
-  end
-
   def test_create_templatized_action
     ta=TestPublisher.create_templatized_action(@user)
     assert_equal Facebooker::Feed::TemplatizedAction,ta.class

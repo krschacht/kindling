@@ -131,27 +131,6 @@ class Facebooker::SessionTest < Test::Unit::TestCase
     assert_equal "Ari Steinberg", response["query1"].first.name
   end
 
-  def test_can_send_notification_with_object
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    @session.expects(:post).with('facebook.notifications.send',{:to_ids=>"1",:notification=>"a",:type=>"user_to_user"},true)
-    @session.send(:instance_variable_set,"@uid",3)
-    user=flexmock("user")
-    user.should_receive(:facebook_id).and_return("1").once
-    @session.send_notification([user],"a")
-  end
-  def test_can_send_notification_with_string
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    @session.send(:instance_variable_set,"@uid",3)
-    @session.expects(:post).with('facebook.notifications.send',{:to_ids=>"1",:notification=>"a", :type=>"user_to_user"},true)
-    @session.send_notification(["1"],"a")
-  end
-
-  def test_can_send_announcement_notification
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    @session.expects(:post).with('facebook.notifications.send',{:to_ids=>"1",:notification=>"a", :type=>"app_to_user"},false)
-    @session.send_notification(["1"],"a")
-  end
-
   def test_can_register_template_bundle
     expect_http_posts_with_responses(example_register_template_bundle_return_xml)
     @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
@@ -229,16 +208,6 @@ class Facebooker::SessionTest < Test::Unit::TestCase
     @session.post(call_name, params)
   end
 
-  def test_requests_inside_batch_are_added_to_batch
-    @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
-    @session.send(:service).expects(:post).once
-    @session.batch do
-      @session.send_notification(["1"],"a")
-      @session.send_notification(["1"],"a")
-    end
-
-  end
-
   def test_parses_batch_response
     @session = Facebooker::Session.create(ENV['FACEBOOK_API_KEY'], ENV['FACEBOOK_SECRET_KEY'])
     expect_http_posts_with_responses(example_batch_run_xml)
@@ -281,35 +250,6 @@ class Facebooker::SessionTest < Test::Unit::TestCase
     expect_http_posts_with_responses(standard_info_xml)
     result = @session.users_standard([4])
     assert_equal "Mike Mangino",result.first.name
-  end
-
-  def test_can_query_for_pages
-    expect_http_posts_with_responses(example_pages_xml)
-    example_page = Facebooker::Page.new(
-      :page_id => 4846711747,
-      :name => "Kronos Quartet",
-      :website => "http://www.kronosquartet.org",
-      :company_overview => "",
-      :session => @session)
-    pages = @session.pages(:fields => %w[ page_id name website company_overview ])
-
-    assert_equal 1, pages.size
-
-    page = pages.first
-    assert_equal "4846711747", page.page_id
-    assert_equal "Kronos Quartet", page.name
-    assert_equal "http://www.kronosquartet.org", page.website
-
-    # TODO we really need a way to differentiate between hash/list and text attributes
-    # assert_equal({}, page.company_overview)
-
-    # sakkaoui : as a fix to the parser, I replace empty text node by "" instead of {}
-    # we have child.attributes['list'] == 'true' that let us know that we have a hash/list.
-    assert_equal("", page.company_overview)
-
-    genre = page.genre
-    assert_equal false, genre.dance
-    assert_equal true, genre.party
   end
 
   private

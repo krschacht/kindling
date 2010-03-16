@@ -226,10 +226,10 @@ module Facebooker
       #   Photo.from_hash(hash)
       # when 'album'
       #   Album.from_hash(hash)
-      when 'page'
-        Page.from_hash(hash)
-      when 'page_admin'
-        Page.from_hash(hash)
+      # when 'page'
+      #   Page.from_hash(hash)
+      # when 'page_admin'
+      #   Page.from_hash(hash)
       # when 'group'
       #   Group.from_hash(hash)
       # when 'event'
@@ -304,14 +304,9 @@ module Facebooker
       Page.new(page_id).user_is_fan?(uid)
     end    
 
-
-    #
-    # Returns a proxy object for handling calls to Facebook cached items
-    # such as images and FBML ref handles
     def server_cache
       Facebooker::ServerCache.new(self)
     end
-
 
     def api
       Facebooker::Api.new(self)
@@ -321,18 +316,6 @@ module Facebooker
     # Returns a proxy object for handling calls to the Facebook Data API
     def data
       Facebooker::Data.new(self)
-    end
-
-    def admin
-      Facebooker::Admin.new(self)
-    end
-    
-    def application
-      Facebooker::Application.new(self)
-    end
-
-    def mobile
-      Facebooker::Mobile.new(self)
     end
 
     ###
@@ -345,20 +328,6 @@ module Facebooker
         response
       end
     end
-
-    def send_notification(user_ids, fbml, email_fbml = nil)
-      params = {:notification => fbml, :to_ids => user_ids.map{ |id| User.cast_to_facebook_id(id)}.join(',')}
-      if email_fbml
-        params[:email] = email_fbml
-      end
-      params[:type]="user_to_user"
-      # if there is no uid, this is an announcement
-      unless uid?
-        params[:type]="app_to_user"
-      end
-
-      post 'facebook.notifications.send', params,uid?
-    end 
 
     def register_template_bundle(one_line_story_templates,short_story_templates=nil,full_story_template=nil, action_links=nil)
       templates = ensure_array(one_line_story_templates)

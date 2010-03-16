@@ -225,24 +225,6 @@ module Facebooker
     end
   end
 
-  class PagesIsAdmin < Parser#:nodoc:
-    def self.process(data)
-      element('pages_isAdmin_response', data).content.strip == '1'
-    end
-  end
-
-  class PagesGetInfo < Parser#:nodoc:
-    def self.process(data)
-      array_of_hashes(element('pages_getInfo_response', data), 'page')
-    end
-  end
-
-  class PagesIsFan < Parser#:nodoc:
-    def self.process(data)
-      element('pages_isFan_response', data).content.strip == '1'
-    end
-  end
-
   class PublishStoryToUser < Parser#:nodoc:
     def self.process(data)
       element('feed_publishStoryToUser_response', data).content.strip
@@ -392,24 +374,6 @@ module Facebooker
     end
   end
 
-  class NotificationsGet < Parser#:nodoc:
-    def self.process(data)
-      hashinate(element('notifications_get_response', data))
-    end
-  end
-
-  class NotificationsSend < Parser#:nodoc:
-    def self.process(data)
-      element('notifications_send_response', data).content.strip
-    end
-  end
-
-  class NotificationsSendEmail < Parser#:nodoc:
-    def self.process(data)
-      element('notifications_sendEmail_response', data).content.strip
-    end
-  end
-
   class GetTags < Parser#nodoc:
     def self.process(data)
       array_of_hashes(element('photos_getTags_response', data), 'photo_tag')
@@ -459,12 +423,6 @@ module Facebooker
   class UploadVideo < Parser#:nodoc:
     def self.process(data)
       hashinate(element('video_upload_response', data))
-    end
-  end
-
-  class SendRequest < Parser#:nodoc:
-    def self.process(data)
-      element('notifications_sendRequest_response', data).content.strip
     end
   end
 
@@ -846,9 +804,6 @@ module Facebooker
       'facebook.users.getLoggedInUser' => GetLoggedInUser,
       'facebook.users.hasAppPermission' => UserHasPermission,
       'facebook.users.isAppUser' => IsAppUser,
-      'facebook.pages.isAdmin' => PagesIsAdmin,
-      'facebook.pages.getInfo' => PagesGetInfo,
-      'facebook.pages.isFan' => PagesIsFan,
       'facebook.friends.get' => GetFriends,
       'facebook.friends.areFriends' => AreFriends,
       'facebook.friends.getAppUsers' => GetAppUsers,
@@ -860,9 +815,6 @@ module Facebooker
       'facebook.feed.getRegisteredTemplateBundles' => GetRegisteredTemplateBundles,
       'facebook.feed.publishUserAction' => PublishUserAction,
       'facebook.message.getThreadsInFolder' => MessageGetThreadsInFolder,
-      'facebook.notifications.get' => NotificationsGet,
-      'facebook.notifications.send' => NotificationsSend,
-      'facebook.notifications.sendRequest' => SendRequest,
       'facebook.profile.getFBML' => ProfileFBML,
       'facebook.profile.setFBML' => ProfileFBMLSet,
       'facebook.profile.getInfo' => ProfileInfo,
@@ -896,7 +848,6 @@ module Facebooker
       'facebook.groups.get' => GroupsGet,
       'facebook.events.getMembers' => EventMembersGet,
       'facebook.groups.getMembers' => GroupGetMembers,
-      'facebook.notifications.sendEmail' => NotificationsSendEmail,
       'facebook.data.getUserPreference' => GetPreference,
       'facebook.data.setUserPreference' => SetPreference,
       'facebook.video.upload' => UploadVideo,

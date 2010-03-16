@@ -1,6 +1,4 @@
 require 'facebooker/model'
-require 'facebooker/models/work_info'
-require 'facebooker/models/family_relative_info'
 module Facebooker
   #
   # Holds attributes and behavior for a Facebook User
@@ -13,12 +11,6 @@ module Facebooker
     FIELDS = [:status, :political, :pic_small, :name, :quotes, :is_app_user, :tv, :profile_update_time, :meeting_sex, :hs_info, :timezone, :relationship_status, :hometown_location, :about_me, :wall_count, :significant_other_id, :pic_big, :music, :work_history, :sex, :religion, :notes_count, :activities, :pic_square, :movies, :has_added_app, :education_history, :birthday, :birthday_date, :first_name, :meeting_for, :last_name, :interests, :current_location, :pic, :books, :affiliations, :locale, :profile_url, :proxied_email, :email_hashes, :allowed_restrictions, :pic_with_logo, :pic_big_with_logo, :pic_small_with_logo, :pic_square_with_logo, :online_presence, :verified, :profile_blurb, :username, :website, :is_blocked, :family, :email]
     STANDARD_FIELDS = [:uid, :first_name, :last_name, :name, :timezone, :birthday, :sex, :affiliations, :locale, :profile_url, :proxied_email, :email]
     populating_attr_accessor(*FIELDS)
-    populating_hash_settable_accessor :current_location, Location
-    populating_hash_settable_accessor :hometown_location, Location
-    populating_hash_settable_accessor :hs_info, EducationInfo::HighschoolInfo
-    populating_hash_settable_list_accessor :education_history, EducationInfo
-    populating_hash_settable_list_accessor :work_history, WorkInfo
-    populating_hash_settable_list_accessor :family, FamilyRelativeInfo
 
     populating_attr_reader :status
 
@@ -186,23 +178,8 @@ module Facebooker
       # end
     end
 
-    ###
-    # Get threads in a folder
-    #
-    # See: http://wiki.developers.facebook.com/index.php/Message.getThreadsInFolder
-    #
-    # +options+ possible options are :folder_id, :limit and :offset
-    def threads(options = {})
-      options ||= {}
-      @threads = session.post('facebook.message.getThreadsInFolder', options) do |response|
-        response.map do |hash|
-          MessageThread.from_hash(hash)
-        end
-      end
-    end
-
     def notifications
-      @notifications ||= Notifications.from_hash(session.post('facebook.notifications.get'))
+      @notifications ||= {} # Notifications.from_hash(session.post('facebook.notifications.get'))
     end
 
     def publish_story(story)

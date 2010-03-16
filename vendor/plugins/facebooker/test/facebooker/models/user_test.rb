@@ -304,45 +304,6 @@ class Facebooker::UserTest < Test::Unit::TestCase
     @user.dashboard_count
   end
   
-  def test_threads_should_return_an_array_of_thread_instances_containing_messages_and_attachments
-    expect_http_posts_with_responses(example_threads)
-    threads = @user.threads
-    assert_not_nil threads
-    assert_instance_of Array, threads
-    assert_operator threads.size, :>, 0
-    for thread in threads
-      assert_instance_of Facebooker::MessageThread, thread
-      assert_instance_of Array, thread.messages
-      assert_operator thread.messages.size, :>, 0
-      assert_instance_of Facebooker::MessageThread::Message, thread.messages.first
-      
-      for message in thread.messages
-        next if message.attachment.blank?
-        assert_instance_of Facebooker::MessageThread::Message::Attachment, message.attachment
-        
-        case message.message_id
-        when '1344434538976_0'
-          assert message.attachment.photo?, 'Attachment of message "1344434538976_0" should be a photo'
-        when '1344434538976_2'
-          assert message.attachment.link?, 'Attachment of message "1344434538976_2" should be a link'
-        when '1012985167472_0'
-          assert message.attachment.video?, 'Attachment of message "1012985167472_0" should be a video'
-        end
-      end
-    end
-  end
-
-  def test_threads_should_return_populated_fields
-    expect_http_posts_with_responses(example_threads)
-    threads = @user.threads
-    
-    thread = threads.first
-    [:thread_id, :subject, :updated_time, :recipients, :parent_message_id, :parent_thread_id,
-      :message_count, :snippet, :snippet_author, :object_id, :unread].each do |field|
-      assert_not_nil thread.__send__(field), "Field #{field} should not be nil"
-    end
-  end
-
   def test_parse_get_dashboard_count
     expect_http_posts_with_responses(dashboard_get_count_xml)
     assert_equal '12', @user.dashboard_count

@@ -147,34 +147,6 @@ class TestFacebooker < Test::Unit::TestCase
     assert_equal true, @session.post('facebook.feed.deactivateTemplateBundleByID', :template_bundle_id => 123)
   end
 
-  def test_can_get_notifications_for_logged_in_user
-    expect_http_posts_with_responses(example_notifications_get_xml)
-    assert_equal("1", @session.user.notifications.messages.unread)
-    assert_equal("0", @session.user.notifications.pokes.unread)
-    assert_equal("1", @session.user.notifications.shares.unread)
-  end
-
-  def test_can_send_notifications
-    expect_http_posts_with_responses(example_notifications_send_xml)
-    assert_nothing_raised {
-      user_ids = [123, 321]
-      notification_fbml = "O HAI!!!"
-      optional_email_fbml = "This would be in the email.  If this is not passed, facebook sends no mailz!"
-      assert_equal('http://www.facebook.com/send_email.php?from=211031&id=52', @session.send_notification(user_ids, notification_fbml, optional_email_fbml))
-    }
-  end
-
-  def test_can_send_emails
-    expect_http_posts_with_responses(example_notifications_send_email_xml)
-    assert_nothing_raised {
-      user_ids = [123, 321]
-      text = "Hi I am the text part of the email."
-      fbml = "Hi I am the fbml version of the <b>email</a>"
-      subject = "Somethign you should really pay attention to."
-      assert_equal('123,321', @session.send_email(user_ids, subject,text,fbml ))
-    }
-  end
-
   def test_can_find_friends_who_have_installed_app
     expect_http_posts_with_responses(example_app_users_xml)
     assert_equal(2, @session.user.friends_with_this_app.size)
@@ -228,37 +200,6 @@ class TestFacebooker < Test::Unit::TestCase
   def test_get_logged_in_user
     expect_http_posts_with_responses(example_get_logged_in_user_xml)
     assert_equal 1240077, @session.post('facebook.users.getLoggedInUser', :session_key => @session.session_key)
-  end
-
-  def test_pages_get_info
-    expect_http_posts_with_responses(example_pages_get_info_xml)
-    info = {
-      'page_id' => '4846711747',
-      'name' => 'Kronos Quartet',
-      'website' => 'http://www.kronosquartet.org',
-      'company_overview' => ""
-    }
-    assert_equal [info], @session.post('facebook.pages.getInfo', :fields => ['company_overview', 'website', 'name', 'page_id'].join(','), :page_ids => [4846711747].join(','))
-  end
-
-  def test_pages_is_admin_true
-    expect_http_posts_with_responses(example_pages_is_admin_true_xml)
-    assert_equal true, @session.post('facebook.pages.isAdmin', :page_id => 123)
-  end
-
-  def test_pages_is_admin_false
-    expect_http_posts_with_responses(example_pages_is_admin_false_xml)
-    assert_equal false, @session.post('facebook.pages.isAdmin', :page_id => 123)
-  end
-
-  def test_pages_is_fan_true
-    expect_http_posts_with_responses(example_pages_is_fan_true_xml)
-    assert_equal true, @session.post('facebook.pages.isFan', :page_id => 123)
-  end
-
-  def test_pages_is_fan_false
-    expect_http_posts_with_responses(example_pages_is_fan_false_xml)
-    assert_equal false, @session.post('facebook.pages.isFan', :page_id => 123)
   end
 
   def test_users_set_status_true
