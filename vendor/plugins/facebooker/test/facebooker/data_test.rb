@@ -7,24 +7,6 @@ class Facebooker::DataTest < Test::Unit::TestCase
     Facebooker.use_curl=false
   end
 
-  def test_can_ask_facebook_to_set_a_cookies
-    expect_http_posts_with_responses(example_set_cookie_xml)
-    assert(@session.data.set_cookie(12345, 'name', 'value'))
-  end
-
-  def test_can_ask_facebook_to_get_cookies
-    expect_http_posts_with_responses(example_get_cookies_xml)
-    assert(@session.data.get_cookies(12345))
-  end
-
-  def test_can_get_cookies_for_user
-    mock_http = establish_session
-    mock_http.should_receive(:post_form).and_return(example_get_cookies_xml).once.ordered(:posts)
-    cookies = @session.data.get_cookies(508508326)
-    assert_equal 'Foo', cookies.first.name
-    assert_equal 'Bar', cookies.first.value
-  end
-
   def test_can_ask_facebook_to_set_a_preference
     expect_http_posts_with_responses(example_set_preference_xml)
     assert(@session.data.set_preference(0, 'hello'))

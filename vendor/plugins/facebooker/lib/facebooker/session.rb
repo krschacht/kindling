@@ -1,4 +1,5 @@
 require 'cgi'
+require 'facebooker/api'
 
 module Facebooker
   #

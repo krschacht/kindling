@@ -207,12 +207,6 @@ module Facebooker
     end
   end
 
-  class FriendListsGet < Parser#:nodoc:
-    def self.process(data)
-      array_of_hashes(element('friends_getLists_response', data), 'friendlist')
-    end
-  end
-
   class UserInfo < Parser#:nodoc:
     def self.process(data)
       array_of_hashes(element('users_getInfo_response', data), 'user')
@@ -543,18 +537,6 @@ module Facebooker
       element('fbml_refreshImgSrc_response', data).content.strip
     end
   end
-
-  class SetCookie < Parser#:nodoc:
-    def self.process(data)
-      element('data_setCookie_response', data).content.strip
-    end
-  end
-
-  class GetCookies < Parser#:nodoc:
-    def self.process(data)
-      array_of_hashes(element('data_getCookie_response', data), 'cookies')
-    end
-  end
   
   class EventsRsvp < Parser#:nodoc:
     def self.process(data)
@@ -868,7 +850,6 @@ module Facebooker
       'facebook.pages.getInfo' => PagesGetInfo,
       'facebook.pages.isFan' => PagesIsFan,
       'facebook.friends.get' => GetFriends,
-      'facebook.friends.getLists' => FriendListsGet,
       'facebook.friends.areFriends' => AreFriends,
       'facebook.friends.getAppUsers' => GetAppUsers,
       'facebook.feed.publishStoryToUser' => PublishStoryToUser,
@@ -889,8 +870,6 @@ module Facebooker
       'facebook.fbml.setRefHandle' => SetRefHandle,
       'facebook.fbml.refreshRefUrl' => RefreshRefURL,
       'facebook.fbml.refreshImgSrc' => RefreshImgSrc,
-      'facebook.data.setCookie' => SetCookie,
-      'facebook.data.getCookies' => GetCookies,
       'facebook.admin.setAppProperties' => SetAppProperties,
       'facebook.admin.getAppProperties' => GetAppProperties,
       'facebook.admin.setRestrictionInfo' => SetRestrictionInfo,

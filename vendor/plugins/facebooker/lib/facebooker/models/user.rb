@@ -51,14 +51,14 @@ module Facebooker
     alias :facebook_id :id
 
     def events(params={})
-#       @events ||= {}
-#       [:start_time,:end_time].compact.each do |key|
-#         params[key] = params[key].to_i
-#       end
-# #      puts @events[params.to_s].nil?
-#       @events[params.to_s] ||= @session.post('facebook.events.get', {:uid => self.id}.merge(params)).map do |event|
-#         Event.from_hash(event)
-#       end
+     #  @events ||= {}
+     # [:start_time,:end_time].compact.each do |key|
+     #   params[key] = params[key].to_i
+     # end
+     #  puts @events[params.to_s].nil?
+     # @events[params.to_s] ||= @session.post('facebook.events.get', {:uid => self.id}.merge(params)).map do |event|
+     #   Event.from_hash(event)
+     # end
     end
 
     def rsvp_event(eid, rsvp_status, options = {})
@@ -68,44 +68,31 @@ module Facebooker
 
     def friends=(list_of_friends,flid=nil)
       @friends_hash ||= {}
-       flid=cast_to_friend_list_id(flid)
-       #use __blank instead of nil so that this is cached
-       cache_key = flid||"__blank"
-
+      #  flid=cast_to_friend_list_id(flid)
+      #  #use __blank instead of nil so that this is cached
+      cache_key = flid||"__blank"
+      # 
       @friends_hash[cache_key] ||= list_of_friends
     end
 
-    def cast_to_friend_list_id(flid)
-      case flid
-       when String
-         list=friend_lists.detect {|f| f.name==flid}
-         raise Facebooker::Session::InvalidFriendList unless list
-         list.flid
-       when FriendList
-         flid.flid
-       else
-         flid
-       end
-     end
-    ##
-    # Retrieve friends
     def friends(flid = nil)
-       @friends_hash ||= {}
-       flid=cast_to_friend_list_id(flid)
-
-       #use __blank instead of nil so that this is cached
-       cache_key = flid||"__blank"
-       options = {:uid=>self.id}
-       options[:flid] = flid unless flid.nil?
-       @friends_hash[cache_key] ||= @session.post('facebook.friends.get', options,false).map do |uid|
-          User.new(uid, @session)
-      end
-      @friends_hash[cache_key]
+      @friends_hash ||= {}
+      #  flid=cast_to_friend_list_id(flid)
+      # 
+      #  #use __blank instead of nil so that this is cached
+      cache_key = flid||"__blank"
+      #  options = {:uid=>self.id}
+      #  options[:flid] = flid unless flid.nil?
+      #  @friends_hash[cache_key] ||= @session.post('facebook.friends.get', options,false).map do |uid|
+      #     User.new(uid, @session)
+      # end
+      @friends_hash[cache_key] ||= @session.api.friends_get( :uid => self.id )
+      # @friends_hash[cache_key]
     end
 
     def friend_ids
-      options = {:uid => self.id}
-      @session.post('facebook.friends.get', options, false)
+      # options = {:uid => self.id}
+      # @session.post('facebook.friends.get', options, false)
     end
 
     ###
@@ -159,17 +146,6 @@ module Facebooker
       Facebooker.json_encode(a)
     end
 
-     def friend_lists
-       @friend_lists ||= @session.post('facebook.friends.getLists').map do |hash|
-         friend_list = FriendList.from_hash(hash)
-         friend_list.session = session
-         friend_list
-       end
-     end
-    ###
-    # Retrieve friends with user info populated
-    # Subsequent calls will be retrieved from memory.
-    # Optional: list of fields to retrieve as symbols
     def friends!(*fields)
       @friends ||= session.post('facebook.users.getInfo', :fields => collect(fields), :uids => friends.map{|f| f.id}.join(',')).map do |hash|
         User.new(hash['uid'], session, hash)

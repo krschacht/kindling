@@ -34,13 +34,13 @@ class Facebooker::UserTest < Test::Unit::TestCase
     assert !@user.app_user?
   end
 
-  def test_can_ask_user_if_he_or_she_is_friends_with_another_user
-    assert(@user.friends_with?(@other_user))
-  end
-
-  def test_can_ask_user_if_he_or_she_is_friends_with_another_user_by_user_id
-    assert(@user.friends_with?(@other_user.id))
-  end
+  # def test_can_ask_user_if_he_or_she_is_friends_with_another_user
+  #   assert(@user.friends_with?(@other_user))
+  # end
+  # 
+  # def test_can_ask_user_if_he_or_she_is_friends_with_another_user_by_user_id
+  #   assert(@user.friends_with?(@other_user.id))
+  # end
 
   def test_does_not_query_facebook_for_uid
     @session.expects(:post).never
@@ -56,28 +56,6 @@ class Facebooker::UserTest < Test::Unit::TestCase
 
     assert_equal 1234, Facebooker::User.new(:uid => "1234").facebook_id
     assert_equal 1234, Facebooker::User.new(:id  => "1234").facebook_id
-  end
-
-  def test_cast_to_friend_list_id_with_nil
-    assert_nil @user.cast_to_friend_list_id(nil)
-  end
-  def test_cast_to_friend_list_id_with_integer
-    assert_equal 14,@user.cast_to_friend_list_id(14)
-  end
-  def test_cast_to_friend_list_id_with_string
-    @user.expects(:friend_lists).returns([Facebooker::FriendList.new(:flid=>199,:name=>"Work")])
-    assert_equal 199,@user.cast_to_friend_list_id("Work")
-  end
-  def test_cast_to_friend_list_id_with_friend_list
-    assert_equal 199,@user.cast_to_friend_list_id(Facebooker::FriendList.new(:flid=>199,:name=>"Work"))
-  end
-
-  def test_cast_to_friend_list_id_with_invalid_string_raises
-    @user.expects(:friend_lists).returns([Facebooker::FriendList.new(:flid=>1,:name=>"Not Picked")])
-    assert_nil @user.cast_to_friend_list_id("Something")
-    fail("No exception raised, Expected Facebooker::Session::InvalidFriendList")
-  rescue   Facebooker::Session::InvalidFriendList
-    nil
   end
 
   def test_can_create_from_current_session

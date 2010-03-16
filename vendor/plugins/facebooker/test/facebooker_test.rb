@@ -68,15 +68,10 @@ class TestFacebooker < Test::Unit::TestCase
     assert_equal(8055, @session.user.id)
   end
 
-  def test_can_get_current_users_friends
-    expect_http_posts_with_responses(example_friends_xml)
-    assert_equal([222333, 1240079], @session.user.friends.map{|friend| friend.id})
-  end
-
-  def test_can_get_current_users_friend_lists
-    expect_http_posts_with_responses(example_friend_lists_xml)
-    assert_equal([12089150545, 16361710545], @session.user.friend_lists.map{|friend_list| friend_list.flid})
-  end
+  # def test_can_get_current_users_friends
+  #   expect_http_posts_with_responses(example_friends_xml)
+  #   assert_equal([222333, 1240079], @session.user.friends.map{|friend| friend.id})
+  # end
 
   def test_can_get_info_for_instance_of_user
     populate_user_info
@@ -274,17 +269,6 @@ class TestFacebooker < Test::Unit::TestCase
   def test_users_set_status_false
     expect_http_posts_with_responses(example_users_set_status_false_xml)
     assert_equal false, @session.post('facebook.users.setStatus', :uid => 123, :status => 'message')
-  end
-
-  def test_desktop_apps_cannot_request_to_get_or_set_profile_fbml_for_any_user_other_than_logged_in_user
-    mock_http = establish_session(@desktop_session)
-    mock_http.should_receive(:post_form).and_return(example_friends_xml).once.ordered(:posts)
-    assert_raises(Facebooker::NonSessionUser) {
-      @desktop_session.user.friends.first.profile_fbml
-    }
-    assert_raises(Facebooker::NonSessionUser) {
-      @desktop_session.user.friends.first.profile_fbml = "O rly"
-    }
   end
 
   def test_revoke_authorization_true

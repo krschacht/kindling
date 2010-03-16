@@ -200,9 +200,7 @@ module Facebooker
       def capture_facebook_friends_if_available!
         return unless request_comes_from_facebook?
         if friends = facebook_params['friends']
-          facebook_session.user.friends = friends.map do |friend_uid|
-            User.new(friend_uid, facebook_session)
-          end
+          facebook_session.user.friends = friends
         end
       end
 
