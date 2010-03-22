@@ -99,54 +99,6 @@ class TestFacebooker < Test::Unit::TestCase
     }
   end
 
-
-  def test_can_publish_story_to_users_feed
-    expect_http_posts_with_responses(example_publish_story_xml)
-    assert_nothing_raised {
-      assert(@session.user.publish_story((s = Facebooker::Feed::Story.new; s.title = 'o hai'; s.body = '4srsly'; s)))
-    }
-  end
-
-
-  def test_can_publish_action_to_users_feed
-    expect_http_posts_with_responses(example_publish_action_xml)
-    assert_nothing_raised {
-      assert(@session.user.publish_action((s = Facebooker::Feed::Action.new; s.title = 'o hai'; s.body = '4srsly'; s)))
-    }
-  end
-
-  def test_can_publish_templatized_action_to_users_feed
-    expect_http_posts_with_responses(example_publish_templatized_action_xml)
-    assert_nothing_raised {
-      action = Facebooker::Feed::TemplatizedAction.new
-      action.title_template = "{actor} did something"
-      assert(@session.user.publish_templatized_action(action))
-    }
-  end
-
-  def test_can_publish_templatized_action_to_users_feed_with_params_as_string
-    json_data="{\"move\": \"punch\"}"
-    action = Facebooker::Feed::TemplatizedAction.new
-    action.title_template = "{actor} did something "
-    action.title_data=json_data
-    assert_equal action.to_params[:title_data],json_data
-  end
-
-  def test_can_publish_templatized_action_to_users_feed_with_params_as_hash
-    json_data="{\"move\": \"punch\"}"
-    hash={:move=>"punch"}
-    hash.expects(:to_json).returns(json_data)
-    action = Facebooker::Feed::TemplatizedAction.new
-    action.title_template = "{actor} did something "
-    action.title_data=hash
-    assert_equal action.to_params[:title_data],json_data
-  end
-
-  def test_can_deactivate_template_bundle_by_id
-    expect_http_posts_with_responses(example_deactivate_template_bundle_by_id_xml)
-    assert_equal true, @session.post('facebook.feed.deactivateTemplateBundleByID', :template_bundle_id => 123)
-  end
-
   def test_can_find_friends_who_have_installed_app
     expect_http_posts_with_responses(example_app_users_xml)
     assert_equal(2, @session.user.friends_with_this_app.size)
@@ -325,84 +277,6 @@ class TestFacebooker < Test::Unit::TestCase
     &lt;fb:else&gt; Not my profile!&lt;/fb:else&gt;
     &lt;/fb:if-is-own-profile&gt;
     </profile_getFBML_response>
-    XML
-  end
-
-  def example_notifications_send_xml
-    <<-XML
-<?xml version="1.0" encoding="UTF-8"?>
-<notifications_send_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd">http://www.facebook.com/send_email.php?from=211031&amp;id=52</notifications_send_response>
-    XML
-  end
-
-	  def example_notifications_send_email_xml
-	    <<-XML
-	    <?xml version="1.0" encoding="UTF-8"?>
-	<notifications_sendEmail_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd">123,321</notifications_sendEmail_response>
-	    XML
-	  end
-
-  def example_request_send_xml
-    <<-XML
-    <?xml version="1.0" encoding="UTF-8"?>
-    <notifications_sendRequest_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd">http://www.facebook.com/send_req.php?from=211031&id=6</notifications_sendRequest_response>
-    XML
-  end
-
-  def example_notifications_get_xml
-    <<-XML
-    <?xml version="1.0" encoding="UTF-8"?>
-    <notifications_get_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd" list="true">
-      <messages>
-        <unread>1</unread>
-        <most_recent>1170644932</most_recent>
-      </messages>
-      <pokes>
-        <unread>0</unread>
-        <most_recent>0</most_recent>
-      </pokes>
-      <shares>
-        <unread>1</unread>
-        <most_recent>1170657686</most_recent>
-      </shares>
-      <friend_requests list="true">
-        <uid>2231342839</uid>
-        <uid>2231511925</uid>
-        <uid>2239284527</uid>
-      </friend_requests>
-      <group_invites list="true"/>
-      <event_invites list="true"/>
-    </notifications_get_response>
-    XML
-  end
-
-  def example_publish_story_xml
-    <<-XML
-    <?xml version="1.0" encoding="UTF-8"?>
-    <feed_publishStoryToUser_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd">1</feed_publishStoryToUser_response>
-    XML
-  end
-
-  def example_publish_action_xml
-    <<-XML
-    <?xml version="1.0" encoding="UTF-8"?>
-    <feed_publishActionOfUser_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd">1</feed_publishActionOfUser_response>
-    XML
-  end
-
-  def example_publish_templatized_action_xml
-    <<-XML
-    <?xml version="1.0" encoding="UTF-8"?>
-    <feed_publishTemplatizedAction_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/ http://api.facebook.com/1.0/facebook.xsd" list="true">
-      <feed_publishTemplatizedAction_response_elt>1</feed_publishTemplatizedAction_response_elt>
-    </feed_publishTemplatizedAction_response>
-    XML
-  end
-
-  def example_deactivate_template_bundle_by_id_xml
-    <<-XML
-    <?xml version="1.0" encoding="UTF-8"?>
-    <feed_deactivateTemplateBundleByID_response xmlns="http://api.facebook.com/1.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://api.facebook.com/1.0/">1</feed_deactivateTemplateBundleByID_response>
     XML
   end
 

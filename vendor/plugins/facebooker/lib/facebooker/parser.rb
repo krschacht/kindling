@@ -249,42 +249,6 @@ module Facebooker
     end
   end  
 
-  class RegisterTemplateBundle < Parser#:nodoc:
-    def self.process(data)
-      element('feed_registerTemplateBundle_response', data).content.to_i
-    end
-  end
-
-  class GetRegisteredTemplateBundles < Parser
-    def self.process(data)
-      array_of_hashes(element('feed_getRegisteredTemplateBundles_response',data), 'template_bundle')
-    end
-  end
-
-  class DeactivateTemplateBundleByID < Parser#:nodoc:
-    def self.process(data)
-      element('feed_deactivateTemplateBundleByID_response', data).content.strip == '1'
-    end
-  end
-
-  class PublishUserAction < Parser#:nodoc:
-    def self.process(data)
-      element('feed_publishUserAction_response', data).children[1].content.strip == "1"
-    end
-  end
-
-  class PublishActionOfUser < Parser#:nodoc:
-    def self.process(data)
-      element('feed_publishActionOfUser_response', data).content.strip
-    end
-  end
-
-  class PublishTemplatizedAction < Parser#:nodoc:
-    def self.process(data)
-      element('feed_publishTemplatizedAction_response', data).children[1].content.strip
-    end
-  end
-
   class SetAppProperties < Parser#:nodoc:
     def self.process(data)
       element('admin_setAppProperties_response', data).content.strip
@@ -807,13 +771,6 @@ module Facebooker
       'facebook.friends.get' => GetFriends,
       'facebook.friends.areFriends' => AreFriends,
       'facebook.friends.getAppUsers' => GetAppUsers,
-      'facebook.feed.publishStoryToUser' => PublishStoryToUser,
-      'facebook.feed.publishActionOfUser' => PublishActionOfUser,
-      'facebook.feed.publishTemplatizedAction' => PublishTemplatizedAction,
-      'facebook.feed.registerTemplateBundle' => RegisterTemplateBundle,
-      'facebook.feed.deactivateTemplateBundleByID' => DeactivateTemplateBundleByID,
-      'facebook.feed.getRegisteredTemplateBundles' => GetRegisteredTemplateBundles,
-      'facebook.feed.publishUserAction' => PublishUserAction,
       'facebook.message.getThreadsInFolder' => MessageGetThreadsInFolder,
       'facebook.profile.getFBML' => ProfileFBML,
       'facebook.profile.setFBML' => ProfileFBMLSet,

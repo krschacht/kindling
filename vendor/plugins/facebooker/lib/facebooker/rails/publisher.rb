@@ -291,16 +291,6 @@ module Facebooker
 
       def send_as(option)
         self._body=case option
-        when :action
-          Facebooker::Feed::Action.new
-        when :story
-          Facebooker::Feed::Story.new
-        when :templatized_action
-          Facebooker::Feed::TemplatizedAction.new
-        when :notification
-          Notification.new
-        when :email
-          Email.new
         when :profile
           Profile.new
         when :ref
@@ -403,17 +393,6 @@ module Facebooker
         # omit the from address
         raise InvalidSender.new("Sender must be a Facebooker::User") unless from.is_a?(Facebooker::User) || !requires_from_user?(from,_body)
         case _body
-        when Facebooker::Feed::TemplatizedAction,Facebooker::Feed::Action
-          from.publish_action(_body)
-        when Facebooker::Feed::Story
-          @recipients.each {|r| r.publish_story(_body)}
-        # when Notification
-        #   (from.nil? ? Facebooker::Session.create : from.session).send_notification(@recipients,_body.fbml)
-        # when Email
-        #   from.session.send_email(@recipients, 
-        #                                      _body.title, 
-        #                                      _body.text, 
-        #                                      _body.fbml)
         when Profile
          # If recipient and from aren't the same person, create a new user object using the
          # userid from recipient and the session from from

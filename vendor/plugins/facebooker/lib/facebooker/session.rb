@@ -299,23 +299,12 @@ module Facebooker
       end
     end
 
-    def is_fan(page_id, uid)
-      puts "Deprecated. Use Page#user_is_fan? instead"
-      Page.new(page_id).user_is_fan?(uid)
-    end    
-
     def server_cache
       Facebooker::ServerCache.new(self)
     end
 
     def api
       Facebooker::Api.new(self)
-    end
-
-    #
-    # Returns a proxy object for handling calls to the Facebook Data API
-    def data
-      Facebooker::Data.new(self)
     end
 
     ###
@@ -327,49 +316,6 @@ module Facebooker
       @stream = post('facebook.stream.get', prepare_get_stream_options(viewer_id, options), true) do |response|
         response
       end
-    end
-
-    def register_template_bundle(one_line_story_templates,short_story_templates=nil,full_story_template=nil, action_links=nil)
-      templates = ensure_array(one_line_story_templates)
-      parameters = {:one_line_story_templates => templates.to_json}
-      
-      unless action_links.blank?
-        parameters[:action_links] = action_links.to_json
-      end
-      
-      unless short_story_templates.blank?
-        templates = ensure_array(short_story_templates)
-        parameters[:short_story_templates] = templates.to_json
-      end
-      
-      unless full_story_template.blank?
-        parameters[:full_story_template] = full_story_template.to_json
-      end
-      
-      post("facebook.feed.registerTemplateBundle", parameters, false)
-    end
-
-    def deactivate_template_bundle_by_id(template_bundle_id)
-      post("facebook.feed.deactivateTemplateBundleByID", {:template_bundle_id => template_bundle_id.to_s}, false)
-    end
-
-    def active_template_bundles
-      post("facebook.feed.getRegisteredTemplateBundles",{},false)
-    end
-
-    def publish_user_action(bundle_id,data={},target_ids=nil,body_general=nil,story_size=nil)
-      parameters={:template_bundle_id=>bundle_id,:template_data=>data.to_json}
-      parameters[:target_ids] = target_ids unless target_ids.blank?
-      parameters[:body_general] = body_general unless body_general.blank?
-      parameters[:story_size] = story_size unless story_size.nil?
-      post("facebook.feed.publishUserAction", parameters)
-    end
-
-
-    def send_email(user_ids, subject, text, fbml = nil)       
-      user_ids = Array(user_ids)
-      params = {:fbml => fbml, :recipients => user_ids.map{ |id| User.cast_to_facebook_id(id)}.join(','), :text => text, :subject => subject} 
-      post 'facebook.notifications.sendEmail', params, false
     end
 
     # Only serialize the bare minimum to recreate the session.

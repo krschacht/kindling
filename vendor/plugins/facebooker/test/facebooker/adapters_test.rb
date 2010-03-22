@@ -84,10 +84,6 @@ class Facebooker::AdaptersTest < Test::Unit::TestCase
      user.populate(:name)
      assert(true)
      assert_equal("foo", user.name)
-     action = Facebooker::Feed::TemplatizedAction.new()
-     action.title_template = "foo"
-     Net::HTTP.stubs(:post_form).returns("<feed_publishTemplatizedAction_response>1</feed_publishTemplatizedAction_response>")
-     user.publish_templatized_action(action)
   end
 
   def test_bebo_process_data

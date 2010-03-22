@@ -4,6 +4,7 @@ module Facebooker
   # Holds attributes and behavior for a Facebook User
   class User
     include Model
+
     class Status
       include Model
       attr_accessor :message, :time, :status_id
@@ -182,32 +183,14 @@ module Facebooker
       @notifications ||= {} # Notifications.from_hash(session.post('facebook.notifications.get'))
     end
 
-    def publish_story(story)
-      publish(story)
-    end
-
-    def publish_action(action)
-      publish(action)
-    end
-
-    def publish_templatized_action(action)
-      publish(action)
-    end
-
     def profile_fbml
       session.post('facebook.profile.getFBML', :uid => id)
     end
 
-    ##
-    # Set the profile FBML for this user
-    #
-    # This does not set profile actions, that should be done with profile_action=
     def profile_fbml=(markup)
       set_profile_fbml(markup, nil, nil, nil)
     end
 
-    ##
-    # Set the mobile profile FBML
     def mobile_fbml=(markup)
       set_profile_fbml(nil, markup, nil,nil)
     end
@@ -229,11 +212,6 @@ module Facebooker
       session.post('facebook.profile.setFBML', parameters,false)
     end
 
-    ## ** NEW PROFILE DESIGN ***
-    # Set a info section for this user
-    #
-    # Note: using set_profile_info as I feel using user.set_info could be confused with the user.getInfo facebook method.
-    #       Also, I feel it fits in line with user.set_profile_fbml.
     def set_profile_info(title, info_fields, format = :text)
       session.post('facebook.profile.setInfo', :title => title, :uid => id,
         :type => format.to_s == "text" ? 1 : 5, :info_fields => info_fields.to_json)
@@ -255,9 +233,6 @@ module Facebooker
       end
     end
 
-
-    ##
-    # Return +limit+ statuses from the user
     def statuses( limit = 50 )
       session.post('facebook.status.get', {:uid => uid, :limit => limit}).collect { |ret| Status.from_hash(ret) }
     end
@@ -274,40 +249,37 @@ module Facebooker
       end
     end
 
-    ##
-    # Checks to see if the user has enabled the given extended permission
     def has_permission?(ext_perm) # ext_perm = email, offline_access, status_update, photo_upload, create_listing, create_event, rsvp_event, sms
       session.post('facebook.users.hasAppPermission', {:ext_perm=>ext_perm, :uid => uid}, false) == "1"
     end
 
-    ##
-    # Returns whether the user (either the session user or user specified by uid) has authorized the calling application
     def app_user?
       session.post('facebook.users.isAppUser', {:uid => self.id}, use_session_key = true)
     end
 
-    ##
-    # Convenience method to check multiple permissions at once
     def has_permissions?(ext_perms)
       ext_perms.all?{|p| has_permission?(p)}
     end
 
-    ##
-    # Convenience method to send email to the current user
-    def send_email(subject, text=nil, fbml=nil)
-      session.send_email([id], subject, text, fbml)
-    end
-
-    ##
-    # Convenience method to set cookie for the current user
     def set_cookie(name, value, expires=nil, path=nil)
-      session.data.set_cookie(id, name, value, expires, path)
+      session.post('facebook.data.setCookie',
+        :uid => self.id,
+        :name => name,
+        :value => value,
+        :expires => expires,
+        :path => path) { |response| response == '1' }
     end
 
-    ##
-    # Convenience method to get cookies for the current user
     def get_cookies(name=nil)
-      session.data.get_cookies(id, name)
+      session.post('facebook.data.getCookies', :uid => self.id, :name => name)
+    end
+
+    def get_preference(pref_id)
+      session.post('facebook.data.getUserPreference', :pref_id=>pref_id)
+    end
+
+    def set_preference(pref_id, value)
+      session.post('facebook.data.setUserPreference', :pref_id=>pref_id, :value=>value)
     end
 
     ##
@@ -323,22 +295,18 @@ module Facebooker
     
     ### NEW DASHBOARD API STUFF
     
-    # facebook_session.user.dashboard_count
     def dashboard_count
       session.post('facebook.dashboard.getCount', :uid => uid)
     end
     
-    # facebook_session.user.dashboard_count = 5
     def dashboard_count=(new_count)
       session.post('facebook.dashboard.setCount', :uid => uid, :count => new_count)
     end
     
-    # facebook_session.user.dashboard_increment_count
     def dashboard_increment_count
       session.post('facebook.dashboard.incrementCount', :uid => uid)
     end
     
-    # facebook_session.user.dashboard_decrement_count
     def dashboard_decrement_count
       session.post('facebook.dashboard.decrementCount', :uid => uid)
     end
@@ -524,9 +492,6 @@ module Facebooker
     end
 
     private
-    def publish(feed_story_or_action)
-      session.post(Facebooker::Feed::METHODS[feed_story_or_action.class.name.split(/::/).last], feed_story_or_action.to_params) == "1" ? true : false
-    end
 
     def self.valid_fields(fields, allowable=FIELDS)
       allowable.reject{|field_name| !fields.empty? && !fields.include?(field_name)}.join(',')
