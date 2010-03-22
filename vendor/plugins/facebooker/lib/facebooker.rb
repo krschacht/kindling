@@ -71,6 +71,10 @@ module Facebooker
       facebooker_config
     end
 
+    def config
+      facebooker_config.symbolize_keys
+    end
+    
     def facebooker_config
       @facebooker_configuration
     end

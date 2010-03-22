@@ -25,7 +25,12 @@ namespace :facebooker do
   		raise "#{param_name} must be specified in config/facebooker.yml" unless params.has_key?(param_name)
   	end
 
-  	ignore_params = [ :api_key, :secret_key, :pretty_errors, :set_asset_host_to_callback_url, :tunnel ]
+  	ignore_params = [ :api_key, 
+  	                  :secret_key, 
+  	                  :pretty_errors, 
+  	                  :set_asset_host_to_callback_url, 
+  	                  :tunnel,
+  	                  :xd_receiver ]
   	ignore_params.each { |p| params.delete( p ) }
 
   	puts "Registering FB App with properties: " 

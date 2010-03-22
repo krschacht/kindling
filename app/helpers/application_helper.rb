@@ -23,11 +23,12 @@ module ApplicationHelper
     html_opts[:class] ||= ""
     html_opts[:class] += " selected"  if opts.delete(:selected)
 
-    # Set these as defaults to save typing :)
-    opts[:host]         = 'apps.facebook.com'
-    opts[:only_path]    = false
-    opts[:canvas]       = true
-    html_opts[:target]  = '_top'
+    # If we want the tabs to reload FB chrome
+    #
+    # opts[:host]         = 'apps.facebook.com'
+    # opts[:only_path]    = false
+    # opts[:canvas]       = true
+    # html_opts[:target]  = '_top'
 
     if href
       %Q(<li class="#{classes}">#{link_to text, href, opts, html_opts}</li>)

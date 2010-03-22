@@ -205,16 +205,26 @@ module Facebooker
       end
 
       def verified_facebook_params
+        if params.keys.any? { |k| k.to_s =~ /^fb_post_/ }
+          prefix = 'fb_post_sig'
+        else
+          prefix = 'fb_sig'
+        end
+
         facebook_sig_params = params.inject({}) do |collection, pair|
-          collection[pair.first.sub(/^fb_sig_/, '')] = pair.last if pair.first[0,7] == 'fb_sig_'
+          if pair.first =~ /^#{prefix}_/
+            collection[pair.first.sub(/^#{prefix}_/, '')] = pair.last
+          end
           collection
         end
-        verify_signature(facebook_sig_params,params['fb_sig'])
 
-        facebook_sig_params.inject(HashWithIndifferentAccess.new) do |collection, pair| 
+        verify_signature(facebook_sig_params,params[prefix])
+
+        facebook_sig_params.inject(HashWithIndifferentAccess.new) do |collection, pair|   
           collection[pair.first] = facebook_parameter_conversions[pair.first].call(pair.last)
           collection
         end
+
       end
       
       def earliest_valid_session

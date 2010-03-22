@@ -14,6 +14,27 @@ class User < ActiveRecord::Base
   
   after_create :award_new_player_premium_currency
 
+  def self.for( facebook_id, facebook_session=nil )
+    u = find_or_create_by_facebook_id( facebook_id.to_i )
+
+    u.store_facebook_session( facebook_session )  unless facebook_session.nil?
+    u
+  end
+
+  def store_facebook_session( facebook_session )
+    return if facebook_session.nil?
+
+    if session_id != facebook_session.session_key
+      update_attribute( :session_id, facebook_session.session_key )
+    end
+
+    @facebook_session = facebook_session
+  end
+
+  def facebook_session
+    @facebook_session ||= recreate_facebook_session
+  end
+
   def installed?
     installed_at && ! removed_at
   end
