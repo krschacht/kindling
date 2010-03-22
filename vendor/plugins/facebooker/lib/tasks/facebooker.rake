@@ -30,7 +30,8 @@ namespace :facebooker do
   	                  :pretty_errors, 
   	                  :set_asset_host_to_callback_url, 
   	                  :tunnel,
-  	                  :xd_receiver ]
+  	                  :xd_receiver,
+  	                  :canvas_name ]
   	ignore_params.each { |p| params.delete( p ) }
 
   	puts "Registering FB App with properties: " 
