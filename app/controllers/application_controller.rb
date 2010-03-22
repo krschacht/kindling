@@ -20,16 +20,7 @@ class ApplicationController < ActionController::Base
                   check_session_cookie
                   set_actor
                   update_facebook_session
-                end
-
-  ## (old) Authentication for FBML or for half-iframe app
-  #
-  #  ensure_authenticated_to_facebook
-  #  ensure_application_is_installed_by_facebook_user  
-  #
-  #  protect_from_forgery # See ActionController::RequestForgeryProtection for details
-
-  
+                end  
   
   ## General app stuff 
 
@@ -42,6 +33,8 @@ class ApplicationController < ActionController::Base
                 :action_name_safe,
                 :select_tab,
 	              :invites_sent_msg
+
+
 
   protected
 

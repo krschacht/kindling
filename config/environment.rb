@@ -40,4 +40,6 @@ Rails::Initializer.run do |config|
   # config.i18n.default_locale = :de
 
   config.action_controller.session_store = :active_record_store
+
+  require 'vendor/plugins/craftedfun_game_core/app/helpers/application_helper'
 end

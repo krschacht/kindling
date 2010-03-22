@@ -355,7 +355,7 @@ module Facebooker
         def request_comes_from_facebook?
           request_is_for_a_facebook_canvas? || request_is_facebook_ajax?
         end
-      end
-    end
-  end
-end
+      end # ClassMethods
+    end # Controller
+  end # Rails
+end # Facebooker
