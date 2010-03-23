@@ -62,7 +62,7 @@ module Facebooker
         Facebooker.set_asset_host_to_callback_url = config['set_asset_host_to_callback_url'] 
       end
       if Object.const_defined?("ActionController") and Facebooker.set_asset_host_to_callback_url
-        ActionController::Base.asset_host = config['callback_url'] 
+        ActionController::Base.asset_host = config['callback_url'].chop
       end
       Facebooker.timeout = config['timeout']
 
