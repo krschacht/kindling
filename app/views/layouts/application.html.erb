@@ -11,7 +11,7 @@
   <body>
     <a name="top"></a>
 
-    <div id="page_body" class="page_body app_name <%= controller.controller_name %> <%= controller.controller_name %>_<%= action_name_safe %>">
+    <div id="page_body" class="page_body life <%= controller.controller_name %> <%= controller.controller_name %>_<%= action_name_safe %> viewing_as_<%= actor.admin_level_name %>">
 
       <%= render :partial => "layouts/stats"  if actor %>
 

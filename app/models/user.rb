@@ -64,6 +64,16 @@ class User < ActiveRecord::Base
   def banned?
     admin_level == -1
   end
+  
+  def admin_level_name
+    levels = {
+      -1  => "",
+      0   => "normal",
+      10  => "moderator",
+      100 => "administrator"
+    }
+    levels[ self.admin_level ] || ""
+  end
 
   def played?
     total_plays > 0
