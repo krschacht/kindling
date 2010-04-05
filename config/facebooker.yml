@@ -14,7 +14,7 @@ keith_development:
 
   application_name: "Schacht"
   canvas_name: schacht
-  callback_url: http://127.0.0.1:3000
+  callback_url: http://127.0.0.1:3000/
   authorize_url: 
   uninstall_url: 
   

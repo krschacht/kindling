@@ -11,6 +11,10 @@ class CreateUsers < ActiveRecord::Migration
       t.boolean  :fan,                      :default => false
       t.boolean  :publish_permission,       :default => false
       t.boolean  :offline_permission,       :default => false
+
+      t.integer  :energy,                   :default => 10
+      t.integer  :energy_max,               :default => 10
+      t.datetime :last_energy_at,           :default => Time.now.utc
       
       t.integer  :currency,                 :default => 0
       t.integer  :premium_currency,         :default => 0
