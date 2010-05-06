@@ -7,11 +7,6 @@ class CreateUsers < ActiveRecord::Migration
       t.integer  :tag_id,                   :default => 1
       t.string   :install_source,           :default => nil
 
-      t.string   :email,                    :default => nil
-      t.boolean  :fan,                      :default => false
-      t.boolean  :publish_permission,       :default => false
-      t.boolean  :offline_permission,       :default => false
-      
       t.integer  :currency,                 :default => 0
       t.integer  :premium_currency,         :default => 0
       t.integer  :total_premium_purchased,  :default => 0
@@ -25,7 +20,7 @@ class CreateUsers < ActiveRecord::Migration
       t.integer  :consecutive_daily_visits, :default => 0
 
       t.datetime :last_played_at
-      t.datetime :last_alert_at
+      t.datetime :last_alert_dismissed_at
       t.datetime :installed_at
       t.datetime :removed_at
 
