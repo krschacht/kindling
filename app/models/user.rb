@@ -14,6 +14,8 @@ class User < ActiveRecord::Base
   
   after_create :award_new_player_premium_currency
 
+	ENERGY_REFILL_RATE  = 60
+
   def self.for( facebook_id, facebook_session=nil )
     u = find_or_create_by_facebook_id( facebook_id.to_i )
 
@@ -62,6 +64,16 @@ class User < ActiveRecord::Base
   def banned?
     admin_level == -1
   end
+  
+  def admin_level_name
+    levels = {
+      -1  => "",
+      0   => "normal",
+      10  => "moderator",
+      100 => "administrator"
+    }
+    levels[ self.admin_level ] || ""
+  end
 
   def played?
     total_plays > 0
@@ -73,5 +85,44 @@ class User < ActiveRecord::Base
 
   def full_name
   end
+
+	def played!
+	  self.total_plays   += 1
+	  self.last_played_at = Time.now.utc
+	end
   
+  ## Energy methods
+  	
+	def energy_earned
+	  energy = ( Time.now.utc - self.last_energy_at ).seconds / ENERGY_REFILL_RATE
+    [ energy.floor, self.energy_max - self.energy ].min
+	end
+	
+	def energy_full?
+	  self.energy == self.energy_max
+	end
+	
+	def seconds_till_more_energy
+    return 0  if energy_full?
+    
+    ( ENERGY_REFILL_RATE - ( Time.now.utc - self.last_energy_at ).seconds ).to_i
+	end
+	
+	# If you call this w/o an amount, then it awards the user energy they've
+	# earned as a result of the timer
+	def adjust_energy( amt = nil )
+    amt ||= energy_earned
+
+    self.energy        += amt	    
+    self.energy         = self.energy_max  if self.energy > self.energy_max
+    self.energy         = 0                if self.energy < 0    
+
+    self.last_energy_at = Time.now.utc     unless amt.nil?
+	end
+
+	def adjust_energy!( amt = nil )
+	  adjust_energy( amt )
+	  self.save
+	end
+	
 end

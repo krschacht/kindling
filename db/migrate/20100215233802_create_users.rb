@@ -7,6 +7,15 @@ class CreateUsers < ActiveRecord::Migration
       t.integer  :tag_id,                   :default => 1
       t.string   :install_source,           :default => nil
 
+      t.string   :email,                    :default => nil
+      t.boolean  :fan,                      :default => false
+      t.boolean  :publish_permission,       :default => false
+      t.boolean  :offline_permission,       :default => false
+
+      t.integer  :energy,                   :default => 10
+      t.integer  :energy_max,               :default => 10
+      t.datetime :last_energy_at,           :default => Time.now.utc
+      
       t.integer  :currency,                 :default => 0
       t.integer  :premium_currency,         :default => 0
       t.integer  :total_premium_purchased,  :default => 0

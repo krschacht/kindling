@@ -343,7 +343,8 @@ a:hover {
 	font-size: 11px;
 	padding: 3px;
 }
-.bluebutton {
+.bluebutton,
+a.bluebutton {
 	background-color:#3B5998;
 /*	border: 1px solid #D8DFEA; */
 	color:#FFFFFF;
@@ -716,4 +717,51 @@ a.black {
   width: 68px;
   height: 68px;
   z-index: 0;
+}
+
+.red {
+  color: #B63B2F;
+}
+
+.green {
+  color: #006600;
+}
+
+.dashboard_tab_wrapper {
+  padding-top: 60px;
+}
+
+.stats_container {
+  float: right;
+}
+
+.stats_box {
+  padding-left: 3px;
+  margin: 0;
+  width: 145px;
+}
+
+.stats_box .header {
+  padding: 1px;
+  font-size: 12px;
+  _font-size: 11px;
+  float: left;
+}
+
+.stats_box .header img {
+  float: left;
+  padding-right: 3px;
+}
+
+.stats_box .info {
+  float: left;
+  padding: 1px;
+  padding-left: 5px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.stats_box .info .sub_text {
+  font-size: 9px;
+  font-weight: normal;
 }

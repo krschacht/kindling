@@ -14,7 +14,7 @@ keith_development:
 
   application_name: "Schacht"
   canvas_name: schacht
-  callback_url: http://127.0.0.1:3000
+  callback_url: http://127.0.0.1:3000/
   authorize_url: 
   uninstall_url: 
   
@@ -40,8 +40,14 @@ test:
     local_port: 3457
 
 production:
-  api_key: API_KEY_FOR_YOUR_HEROKU_FACEBOOK_APP
-  secret_key: SECRET_FOR_YOUR_HEROKU_FACEBOOK_APP
-  canvas_name: http://apps.facebook.com/HEROKU_DOMAIN_NAME/
-  callback_url: http://HEROKU_DOMAIN_NAME.heroku.com/
-  pretty_errors: true
+  api_key: 2320ce2a18e17dff0610418bec440eb4
+  secret_key: 7f32f29a9518c7cf1ea79a14ef2bdeba
+  xd_receiver: /xd_receiver.html
+  pretty_errors: false
+  set_asset_host_to_callback_url: true
+
+  application_name: "My Bimbo"
+  canvas_name: mybimbo
+  callback_url: http://life-rpg.heroku.com/
+  authorize_url: http://life-rpg.heroku.com/callback/install
+  uninstall_url: http://life-rpg.heroku.com/callback/remove

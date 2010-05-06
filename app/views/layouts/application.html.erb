@@ -11,7 +11,9 @@
   <body>
     <a name="top"></a>
 
-    <div id="page_body" class="page_body gardens <%= controller.controller_name %> <%= controller.controller_name %>_<%= action_name_safe %> viewing_as_">
+    <div id="page_body" class="page_body life <%= controller.controller_name %> <%= controller.controller_name %>_<%= action_name_safe %> viewing_as_<%= actor.admin_level_name %>">
+
+      <%= render :partial => "layouts/stats"  if actor %>
 
       <div class="dashboard_tab_wrapper">
         <div class="dashboard_title">
@@ -22,7 +24,7 @@
 
       <div class="inner_body">
 
-        <%= yield %>
+        <%= yield(:content) or yield %>
 
       </div> <!-- inner_body -->
     </div> <!-- page_body -->
@@ -30,3 +32,4 @@
     <%= render :partial => "layouts/javascripts" %>
   </body>
 </html>
+				
