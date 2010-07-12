@@ -17,7 +17,7 @@
 
   <div class="stats_box">
     <div class="header">
-      <%= image_tag("icons/world.png", :alt => '' ) -%>
+      <%= image_tag("icons/coins_silver.png", :alt => '' ) -%>
       Currency:
     </div>
     <div class="info">
@@ -29,18 +29,13 @@
   <div class="stats_box" style="width: 150px;">
     <div class="header">
       <%= image_tag("icons/coins_gold.png", :alt => '' ) -%>
-      Prem Currency:
+      Premium Cur:
     </div>
     <div class="info">
       <span id="info_gold"><%= number_with_delimiter actor.premium_currency %></span>
     </div>
     <div class="stretcher"></div>
   </div>
-
-  <div class="gold_link hidden">
-    <%= link_to "get more gold", "/shop/donations" %>
-  </div>
-
 
   <div class="stretcher"></div>
   

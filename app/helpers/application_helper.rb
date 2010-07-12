@@ -40,8 +40,8 @@ module ApplicationHelper
 
   def gambit_pay_panel( opts = { :width => 590, :height => 60, :campaign_key => Gambit.campaign_key } )
     campaign_key = opts[:campaign_key] || Gambit.campaign_key
-    if current_user
-      uid = current_user.id
+    if actor
+      uid = actor.id
       url = gambit_pay_url
 
       %Q( <iframe src="#{url}" 
@@ -53,7 +53,7 @@ module ApplicationHelper
     end
   end
   
-  def gambit_pay_url( campaign_key = Gambit.campaign_key, uid = current_user.id )
+  def gambit_pay_url( campaign_key = Gambit.campaign_key, uid = actor.id )
     "http://banners.getgambit.com/payment_banner?size=pbp&k=#{campaign_key}&uid=#{uid}"    
   end
 
@@ -61,11 +61,11 @@ module ApplicationHelper
     opts[:width] ||= 604
     opts[:height] ||= 1750
     campaign_key = opts[:campaign_key] || Gambit.campaign_key
-    uid = current_user.id
+    uid = actor.id
     url = ( opts[:url] || "http://getgambit.com/panel?" ) + "k=#{campaign_key}&uid=#{uid}"
     height = opts[:cover_height] ? "height: #{opts[:cover_height]}px; color: #FFFFFF;" : ""
     
-    if current_user
+    if actor
       %Q( <div class="gambit_offer_panel">
           <div class="cover_top" style="width: #{opts[:width]}px; #{height}">
             <div #{'style="display: none;"' unless height == ""}>

@@ -21,19 +21,40 @@
             :action     => :index,
             :selected   => @welcome_tab ) +
 
-      tab(  "Invite Friends",
-            :controller => :relationships,
-            :action     => :invite,
-            :selected   => @relationships_tab )
+      tab(  "Donate",
+            :controller => :gambit,
+            :action     => :index,
+            :selected   => @gambit_tab ) +
 
+      tab(  "Invite Friends",
+            {
+              :controller => :relationships,
+              :action     => :invite,
+              :selected   => @relationships_tab,
+              :host       => "apps.facebook.com",
+              :only_path  => false,
+              :canvas     => true,
+              :fb_force_mode => 'fbml' 
+            },
+            {
+              :target => '_top'
+            } )
+            
     %>
   </ul>
   <ul class="right_tabs">
     <%=
       tab(  "Right-side Tab",
             :href       => "#",
-            :first      => true,
-            :last       => true )
+            :first      => true ) +
+      
+      tab(  "CSS Demo",
+            :href     => "http://web1.tunnlr.com:10107/css_demo.html",
+            :last     => true,
+            :target   => "_top"
+        )
     %>
+
+    
   </ul>
 </div> <!-- tabs -->

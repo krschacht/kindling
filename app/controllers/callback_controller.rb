@@ -38,7 +38,7 @@ class CallbackController < ApplicationController
   end
 
   # Sets the @user instance variable to the user we're being notified about.
-  # We can't use the application filter set_current_user because we're not
+  # We can't use the application filter set_actor because we're not
   # given a facebook session for some callbacks.
 
   def set_user

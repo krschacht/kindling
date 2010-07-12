@@ -12,7 +12,7 @@
                            :fb_force_mode => 'fbml' ) %>"
       method="post"
       invite="true"
-      type="<%= FacebookClient.app_name %>"
+      type="<%= Facebooker.config[:application_name] %>"
       content="<%= h( %Q( I'm playing this awesome new game! Join my
   army before I attack you!
     <fb:req-choice

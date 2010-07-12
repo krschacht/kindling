@@ -43,19 +43,19 @@ class User < ActiveRecord::Base
     s
   end
   
-  def friends
+  def friends_in_game
 	  #  [{'uid2'=> 1234}, {'uid2'=> 45678} ... ]
 	  
 	  unless @friends
-	    fql_friends = self.facebook_session.fql_query(  
-  	                :query => "SELECT uid,first_name,last_name,name FROM user WHERE uid IN " +
-  	                          "( SELECT uid2 FROM friend WHERE uid1=#{ self.facebook_id } )" )
+	    fql_friends = facebook_session.fql_query(  
+  	                  "SELECT uid,first_name,last_name,name FROM user WHERE uid IN " +
+  	                  "( SELECT uid2 FROM friend WHERE uid1=#{ self.facebook_id } )" )
 
-  	  uids = fql_friends.collect { |f| f["uid"] }
-      @friends = User.find(:all, :conditions => ["uid IN (#{ uids.join ',' })"] )
+  	  uids = fql_friends.collect { |f| f.uid }
+      @friends = User.find(:all, :conditions => ["facebook_id IN (#{ uids.join ',' })"] )
 	  end
 	  
-	  @friends
+	  @friends = []
 	end
 
   def installed?

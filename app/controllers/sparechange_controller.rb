@@ -6,16 +6,7 @@
 
 class SparechangeController < ApplicationController
 
-  skip_filter  :ensure_application_is_installed_by_facebook_user,
-               :ensure_authenticated_to_facebook,
-               :set_facebook_session,
-               :set_current_user,
-               :log_user_ids,
-               :set_ie7_header,
-               :update_install,
-               :update_install_source,
-               :select_tab,
-          :except => :index
+  skip_before_filter  :ensure_installed, :except => :index
 
   def postback
     begin

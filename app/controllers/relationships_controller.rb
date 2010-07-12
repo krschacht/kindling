@@ -4,7 +4,7 @@ class RelationshipsController < ApplicationController
   layout nil
   
   def invite
-    @exclude_ids = actor.friends.collect { |f| f.uid }.join( "," )
+    @exclude_ids = actor.friends_in_game.collect { |f| f.uid }.join( "," )
   end
   
   def invites_sent
