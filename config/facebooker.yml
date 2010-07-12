@@ -14,10 +14,11 @@ keith_development:
 
   application_name: "Schacht"
   canvas_name: schacht
-  callback_url: http://127.0.0.1:3000/
+  callback_url: http://web1.tunnlr.com:10107/
   authorize_url: 
   uninstall_url: 
-  
+  connect_url: http://web1.tunnlr.com:10107
+    
   tunnel:
     public_host_username: tunnlr11
     public_host: ssh1.tunnlr.com
@@ -51,3 +52,4 @@ production:
   callback_url: http://life-rpg.heroku.com/
   authorize_url: http://life-rpg.heroku.com/callback/install
   uninstall_url: http://life-rpg.heroku.com/callback/remove
+  connect_url: http://life-rpg.heroku.com
