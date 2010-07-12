@@ -5,6 +5,26 @@
 # For a complete list of properties you can include: 
 #   http://wiki.developers.facebook.com/index.php/ApplicationProperties
 
+development:
+  api_key: 7c5d9d041a99c03159bbaf537ac42791
+  secret_key: ac968876a0fa4eb1013fe120a30f218e
+  xd_receiver: /xd_receiver.html
+  pretty_errors: false
+  set_asset_host_to_callback_url: true
+
+  application_name: "Schacht"
+  canvas_name: schacht
+  callback_url: http://web1.tunnlr.com:10107/
+  authorize_url: 
+  uninstall_url: 
+  connect_url: http://web1.tunnlr.com:10107
+    
+  tunnel:
+    public_host_username: tunnlr11
+    public_host: ssh1.tunnlr.com
+    public_port: 10107
+    local_port: 3000
+    
 keith_development:
   api_key: 7c5d9d041a99c03159bbaf537ac42791
   secret_key: ac968876a0fa4eb1013fe120a30f218e
@@ -25,8 +45,6 @@ keith_development:
     public_port: 10107
     local_port: 3000
   
-
-
 test:
   api_key: a7dd67a42b0ea8180a511ccf82d6fee3
   secret_key: 275704ec8576de1a475952999ea9b293

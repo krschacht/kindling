@@ -4,12 +4,12 @@
   <div class="stats_box">
     <div class="header">
       <%= image_tag("icons/lightening.png", :alt => '' ) -%>
-      Ammo:
+      Energy:
     </div>
     <div class="info">
-        <%= @actor.energy %> / <%= @actor.energy_max %>
-        <div class="sub_text red <%= 'hidden' if @actor.energy_full? %>">
-          more in <span id="energy_timer"><%= @actor.seconds_till_more_energy %> sec</span>
+        <%= actor.energy %> / <%= actor.energy_max %>
+        <div class="sub_text red <%= 'hidden' if actor.energy_full? %>">
+          more in <span id="energy_timer"><%= actor.seconds_till_more_energy %> sec</span>
         </div>
     </div>
     <div class="stretcher"></div>
@@ -18,27 +18,27 @@
   <div class="stats_box">
     <div class="header">
       <%= image_tag("icons/world.png", :alt => '' ) -%>
-      Plastic:
+      Currency:
     </div>
     <div class="info">
-        <%= number_with_delimiter @actor.currency %>
+        <%= number_with_delimiter actor.currency %>
     </div>
     <div class="stretcher"></div>
   </div>
 
-  <div class="stats_box hidden" style="width: 150px;">
+  <div class="stats_box" style="width: 150px;">
     <div class="header">
       <%= image_tag("icons/coins_gold.png", :alt => '' ) -%>
-      Gold:
+      Prem Currency:
     </div>
     <div class="info">
-      <span id="info_gold"><%= number_with_delimiter( 0 ) %></span>
+      <span id="info_gold"><%= number_with_delimiter actor.premium_currency %></span>
     </div>
     <div class="stretcher"></div>
   </div>
 
   <div class="gold_link hidden">
-    <%= link_to "get more gold", "/shop/donations", :onclick => "record_event('click_track/gold_link/stats_box');" %>
+    <%= link_to "get more gold", "/shop/donations" %>
   </div>
 
 

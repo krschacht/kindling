@@ -21,15 +21,16 @@
             :action     => :index,
             :selected   => @welcome_tab ) +
 
-      tab(  "Send Gifts",
-            :href       => "#",
-            :last       => true )
+      tab(  "Invite Friends",
+            :controller => :relationships,
+            :action     => :invite,
+            :selected   => @relationships_tab )
 
     %>
   </ul>
   <ul class="right_tabs">
     <%=
-      tab(  "Help & Discuss",
+      tab(  "Right-side Tab",
             :href       => "#",
             :first      => true,
             :last       => true )

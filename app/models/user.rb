@@ -36,6 +36,27 @@ class User < ActiveRecord::Base
   def facebook_session
     @facebook_session ||= recreate_facebook_session
   end
+  
+  def recreate_facebook_session
+    s = Facebooker::Session.create
+    s.secure_with!( session_id, facebook_id, 1.hour.from_now )
+    s
+  end
+  
+  def friends
+	  #  [{'uid2'=> 1234}, {'uid2'=> 45678} ... ]
+	  
+	  unless @friends
+	    fql_friends = self.facebook_session.fql_query(  
+  	                :query => "SELECT uid,first_name,last_name,name FROM user WHERE uid IN " +
+  	                          "( SELECT uid2 FROM friend WHERE uid1=#{ self.facebook_id } )" )
+
+  	  uids = fql_friends.collect { |f| f["uid"] }
+      @friends = User.find(:all, :conditions => ["uid IN (#{ uids.join ',' })"] )
+	  end
+	  
+	  @friends
+	end
 
   def installed?
     installed_at && ! removed_at
